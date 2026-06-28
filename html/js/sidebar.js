@@ -22,24 +22,24 @@
     <div class="nav-item disabled" title="Coming soon">
       <span class="nav-icon">⬡</span>
       <span class="nav-label">CIDR Aggregator</span>
-      <span class="nav-badge">soon</span>
+      <span class="nav-badge">2 weeks</span>
     </div>
     <div class="nav-item disabled" title="Coming soon">
       <span class="nav-icon">⬡</span>
       <span class="nav-label">IP Converter</span>
-      <span class="nav-badge">soon</span>
+      <span class="nav-badge">2 weeks</span>
     </div>
 
     <div class="nav-section-label">// utilities</div>
     <div class="nav-item disabled" title="Coming soon">
       <span class="nav-icon">⬡</span>
       <span class="nav-label">MAC Lookup</span>
-      <span class="nav-badge">soon</span>
+      <span class="nav-badge">2 weeks</span>
     </div>
     <div class="nav-item disabled" title="Coming soon">
       <span class="nav-icon">⬡</span>
       <span class="nav-label">Port Reference</span>
-      <span class="nav-badge">soon</span>
+      <span class="nav-badge">2 weeks</span>
     </div>
 
     <div class="nav-section-label">// command builders</div>
