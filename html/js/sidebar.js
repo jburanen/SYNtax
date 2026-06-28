@@ -19,34 +19,29 @@
       <span class="nav-icon">⬡</span>
       <span class="nav-label">Subnet Calculator</span>
     </a>
-    <div class="nav-item disabled" title="Coming soon">
-      <span class="nav-icon">⬡</span>
-      <span class="nav-label">CIDR Aggregator</span>
-      <span class="nav-badge">2 weeks</span>
-    </div>
-    <div class="nav-item disabled" title="Coming soon">
-      <span class="nav-icon">⬡</span>
-      <span class="nav-label">IP Converter</span>
-      <span class="nav-badge">2 weeks</span>
-    </div>
 
     <div class="nav-section-label">// utilities</div>
     <div class="nav-item disabled" title="Coming soon">
       <span class="nav-icon">⬡</span>
-      <span class="nav-label">MAC Lookup</span>
-      <span class="nav-badge">2 weeks</span>
-    </div>
-    <div class="nav-item disabled" title="Coming soon">
-      <span class="nav-icon">⬡</span>
-      <span class="nav-label">Port Reference</span>
+      <span class="nav-label">Compose Converter</span>
       <span class="nav-badge">2 weeks</span>
     </div>
 
     <div class="nav-section-label">// command builders</div>
     <a href="tcpdump.html" class="nav-item" data-tool="tcpdump">
       <span class="nav-icon">⬡</span>
-      <span class="nav-label">tcpdump Builder</span>
+      <span class="nav-label">tcpdump</span>
     </a>
+    <div class="nav-item disabled" title="Coming soon">
+      <span class="nav-icon">⬡</span>
+      <span class="nav-label">fw monitor</span>
+      <span class="nav-badge">2 weeks</span>
+    </div>
+    <div class="nav-item disabled" title="Coming soon">
+      <span class="nav-icon">⬡</span>
+      <span class="nav-label">cppcap</span>
+      <span class="nav-badge">2 weeks</span>
+    </div>
   </nav>
 
   <div class="sidebar-footer">
