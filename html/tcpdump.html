@@ -159,6 +159,7 @@
                 min="1"
                 autocomplete="off"
               />
+              <div class="field-msg" id="countMsg"></div>
             </div>
 
             <div class="input-group">
@@ -171,6 +172,7 @@
                 min="1"
                 autocomplete="off"
               />
+              <div class="field-msg" id="snaplenMsg"></div>
             </div>
 
             <div class="input-group">
@@ -245,10 +247,11 @@
                   type="text"
                   id="srcHost"
                   class="mono-input"
-                  placeholder="10.0.0.1"
+                  placeholder="10.0.0.1 or 10.0.0.0/24"
                   autocomplete="off"
                   spellcheck="false"
                 />
+                <div class="field-msg" id="srcHostMsg"></div>
               </div>
               <div class="input-group">
                 <label class="field-label" for="srcPort">Port</label>
@@ -260,6 +263,7 @@
                   autocomplete="off"
                   spellcheck="false"
                 />
+                <div class="field-msg" id="srcPortMsg"></div>
               </div>
             </div>
 
@@ -271,10 +275,11 @@
                   type="text"
                   id="dstHost"
                   class="mono-input"
-                  placeholder="10.0.0.2"
+                  placeholder="10.0.0.2 or 192.168.0.0/16"
                   autocomplete="off"
                   spellcheck="false"
                 />
+                <div class="field-msg" id="dstHostMsg"></div>
               </div>
               <div class="input-group">
                 <label class="field-label" for="dstPort">Port</label>
@@ -286,6 +291,7 @@
                   autocomplete="off"
                   spellcheck="false"
                 />
+                <div class="field-msg" id="dstPortMsg"></div>
               </div>
             </div>
 
@@ -297,10 +303,11 @@
                   type="text"
                   id="host"
                   class="mono-input"
-                  placeholder="src or dst"
+                  placeholder="src or dst, CIDR ok"
                   autocomplete="off"
                   spellcheck="false"
                 />
+                <div class="field-msg" id="hostMsg"></div>
               </div>
               <div class="input-group">
                 <label class="field-label" for="port">Port</label>
@@ -312,6 +319,7 @@
                   autocomplete="off"
                   spellcheck="false"
                 />
+                <div class="field-msg" id="portMsg"></div>
               </div>
             </div>
           </div>

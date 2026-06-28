@@ -608,6 +608,28 @@ select.mono-input option { background: var(--bg-raised); }
   border-bottom: 1px solid var(--border);
 }
 
+/* Per-field validation messages */
+.field-msg {
+  font-size: 0.68rem;
+  margin-top: 5px;
+  line-height: 1.4;
+  min-height: 0;
+}
+.field-msg.error   { color: var(--red); }
+.field-msg.warning { color: var(--amber); }
+
+/* Command output error state — amber border when inputs have errors */
+.cmd-output.has-errors {
+  border-color: rgba(230,168,23,0.5);
+}
+
+/* Disabled copy button */
+.btn-primary:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.btn-primary:disabled:hover { opacity: 0.35; }
+
 /* Static hint keyword (no hover behavior) */
 .hint-val-static {
   color: var(--cyan-dim);
