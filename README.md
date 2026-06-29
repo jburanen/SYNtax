@@ -109,11 +109,12 @@ Edit `GITHUB_USER`, `WEBHOOK_SECRET`, and other variables at the top of the scri
 - CIDR ranges translated to fw monitor mask syntax: `(src & 255.255.255.0) = 10.0.0.0`
 - Output is a valid pcap file readable by Wireshark
 
-### Coming soon
+### Coming in two week (if you know, you know)
 
 - Compose Converter
 - cppcap Builder
 - fw ctl zdebug Builder
+- Troubleshooting Coach
 
 ---
 
