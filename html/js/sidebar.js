@@ -59,7 +59,7 @@
       </svg>
       github.com/jburanen/nettools
     </a>
-    <p class="meta-disclaimer">Created with Claude.<br>Accuracy not guaranteed.</p>
+    <p class="meta-disclaimer"><a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener">GNU GPLv3</a><br>Created with Claude.<br>Accuracy not guaranteed.</p>
   </div>
 </aside>`;
 
