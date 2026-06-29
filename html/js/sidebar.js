@@ -71,11 +71,14 @@
   const sidebar = document.getElementById('sidebar');
   const toggle  = document.getElementById('sidebarToggle');
   if (sidebar && toggle) {
-    toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+    toggle.addEventListener('click', e => {
+      e.stopPropagation();
+      sidebar.classList.toggle('open');
+    });
     document.addEventListener('click', e => {
       if (sidebar.classList.contains('open') &&
           !sidebar.contains(e.target) &&
-          e.target !== toggle) {
+          !toggle.contains(e.target)) {
         sidebar.classList.remove('open');
       }
     });

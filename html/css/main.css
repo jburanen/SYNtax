@@ -175,7 +175,7 @@ input  { font-family: var(--font); }
   background: var(--bg-surface);
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 200;
 }
 .topbar-left { display: flex; align-items: center; gap: 14px; }
 
@@ -523,6 +523,9 @@ input  { font-family: var(--font); }
   .tool-view { padding: 20px 16px; }
   .split-input { flex-direction: column; }
   .result-grid { grid-template-columns: 1fr; }
+
+  /* Prevent iOS auto-zoom when focusing inputs smaller than 16px */
+  .mono-input { font-size: 16px; }
 }
 
 /* --- tcpdump Builder -------------------------------------- */
