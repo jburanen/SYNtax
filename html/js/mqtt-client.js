@@ -16,7 +16,8 @@ class MQTTWsClient {
     this.onError       = null;   // (message:string)
   }
 
-  connect(url, clientId) {
+  // opts: { clientId?, username?, password? }
+  connect(url, opts = {}) {
     this._close();
     let ws;
     try {
@@ -27,7 +28,7 @@ class MQTTWsClient {
     }
     this.ws = ws;
     ws.binaryType = 'arraybuffer';
-    ws.addEventListener('open',    () => this._onOpen(clientId));
+    ws.addEventListener('open',    () => this._onOpen(opts));
     ws.addEventListener('message', e  => this._recv(new Uint8Array(e.data)));
     ws.addEventListener('error',   ()  => {
       if (this.onError) this.onError('WebSocket connection failed — verify broker address, port, WebSocket path, and that the broker has WebSocket support enabled');
@@ -81,18 +82,34 @@ class MQTTWsClient {
     this._buf = new Uint8Array(0);
   }
 
-  _onOpen(clientId) {
+  _onOpen({ clientId, username, password } = {}) {
     const cid = _encStr(clientId || ('nt_' + Math.random().toString(36).slice(2, 9)));
+
+    // Build connect flags: clean session always set; username/password bits conditional
+    let flags = 0x02;
+    const payloadParts = [cid];
+    if (username) {
+      flags |= 0x80;
+      payloadParts.push(_encStr(username));
+      if (password) {
+        flags |= 0x40;
+        payloadParts.push(_encStr(password));
+      }
+    }
+
     // Protocol name "MQTT" with 2-byte length prefix
     const proto  = new Uint8Array([0x00, 0x04, 0x4D, 0x51, 0x54, 0x54]);
-    // Variable header: protocol level 4 (MQTT 3.1.1), connect flags 0x02 (clean session), keepalive 60s
-    const varHdr = new Uint8Array([...proto, 0x04, 0x02, 0x00, 0x3C]);
-    const rem    = varHdr.length + cid.length;
-    const p      = new Uint8Array(2 + rem);
-    p[0] = 0x10; // CONNECT
-    p[1] = rem;
-    p.set(varHdr, 2);
-    p.set(cid, 2 + varHdr.length);
+    // Variable header: protocol level 4 (MQTT 3.1.1), connect flags, keepalive 60s
+    const varHdr = new Uint8Array([...proto, 0x04, flags, 0x00, 0x3C]);
+
+    const payloadLen = payloadParts.reduce((sum, p) => sum + p.length, 0);
+    const rem = varHdr.length + payloadLen;
+    const p   = new Uint8Array(2 + rem);
+    let off = 0;
+    p[off++] = 0x10; // CONNECT
+    p[off++] = rem;
+    p.set(varHdr, off); off += varHdr.length;
+    for (const part of payloadParts) { p.set(part, off); off += part.length; }
     this.ws.send(p);
 
     this._ping = setInterval(() => {
@@ -212,6 +229,8 @@ const els = {
   port:        _$('mqttPort'),
   path:        _$('mqttPath'),
   proto:       _$('mqttProto'),
+  username:    _$('mqttUsername'),
+  password:    _$('mqttPassword'),
   connectBtn:  _$('mqttConnectBtn'),
   statusDot:   _$('mqttStatusDot'),
   statusText:  _$('mqttStatusText'),
@@ -255,6 +274,7 @@ function doConnect() {
   app.client = new MQTTWsClient();
 
   app.client.onConnect = () => {
+    els.password.value = '';   // clear after broker has accepted credentials
     app.connected   = true;
     app.connecting  = false;
     app.connectTime = Date.now();
@@ -279,6 +299,7 @@ function doConnect() {
   };
 
   app.client.onError = msg => {
+    els.password.value = '';   // clear on auth failure too — don't leave it in the DOM
     app.connected  = false;
     app.connecting = false;
     _showError(msg);
@@ -289,7 +310,9 @@ function doConnect() {
 
   app.client.onMessage = (topic, payload) => _handleMessage(topic, payload);
 
-  app.client.connect(url);
+  const username = els.username.value.trim() || undefined;
+  const password = els.password.value || undefined;
+  app.client.connect(url, { username, password });
 }
 
 function doDisconnect() {

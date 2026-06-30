@@ -80,6 +80,30 @@
             </div>
           </div>
 
+          <div class="mqtt-conn-row" style="margin-top:10px">
+            <div class="input-group mqtt-broker-group">
+              <label class="field-label" for="mqttUsername">Username <span class="mqtt-optional">(optional)</span></label>
+              <input
+                type="text"
+                id="mqttUsername"
+                class="mono-input"
+                placeholder="leave blank for anonymous"
+                autocomplete="off"
+                spellcheck="false"
+              />
+            </div>
+            <div class="input-group mqtt-broker-group">
+              <label class="field-label" for="mqttPassword">Password <span class="mqtt-optional">(optional)</span></label>
+              <input
+                type="password"
+                id="mqttPassword"
+                class="mono-input"
+                placeholder="leave blank for anonymous"
+                autocomplete="new-password"
+              />
+            </div>
+          </div>
+
           <div class="input-hint">
             Broker must have WebSocket support enabled.
             Common WebSocket ports: <span class="hint-val-static">8083</span>, <span class="hint-val-static">9001</span>, <span class="hint-val-static">8000</span>.

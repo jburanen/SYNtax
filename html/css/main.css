@@ -871,6 +871,8 @@ select.mono-input option { background: var(--bg-raised); }
 .tool-view--wide { max-width: 1200px; }
 
 /* Connection row */
+.mqtt-optional { color: var(--text-muted); font-weight: 400; }
+
 .mqtt-conn-row {
   display: flex;
   gap: 10px;
