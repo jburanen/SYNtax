@@ -881,8 +881,28 @@ select.mono-input option { background: var(--bg-raised); }
 }
 .mqtt-broker-group { flex: 2 1 220px; margin-bottom: 0; }
 .mqtt-port-group   { flex: 0 0 90px;  margin-bottom: 0; }
-.mqtt-path-group   { flex: 0 0 100px; margin-bottom: 0; }
-.mqtt-proto-group  { flex: 0 0 100px; margin-bottom: 0; }
+
+.input-prefix-wrap {
+  display: flex;
+  align-items: stretch;
+}
+.input-prefix {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-bright);
+  border-right: none;
+  border-radius: var(--radius) 0 0 var(--radius);
+  padding: 0 12px;
+  font-size: 0.88rem;
+  color: var(--cyan-dim);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.input-prefix-wrap .mono-input {
+  border-radius: 0 var(--radius) var(--radius) 0;
+  flex: 1;
+}
 
 .mqtt-conn-actions {
   display: flex;
@@ -1074,8 +1094,6 @@ select.mono-input option { background: var(--bg-raised); }
 
 @media (max-width: 720px) {
   .mqtt-conn-row   { flex-direction: column; }
-  .mqtt-port-group,
-  .mqtt-path-group,
-  .mqtt-proto-group { flex: 1 1 100%; }
+  .mqtt-port-group { flex: 1 1 100%; }
   .tree-value { max-width: 180px; }
 }

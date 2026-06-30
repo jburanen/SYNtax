@@ -19,16 +19,23 @@ class MQTTWsClient {
   // opts: { clientId?, username?, password? }
   connect(url, opts = {}) {
     this._close();
+    // Pull credentials into a local object so we can zero them out immediately
+    // after the CONNECT packet is sent, rather than holding them for the WebSocket lifetime.
+    const creds = { clientId: opts.clientId, username: opts.username, password: opts.password };
     let ws;
     try {
-      ws = new WebSocket(url, ['mqtt']);
+      ws = new WebSocket(url);
     } catch (e) {
       if (this.onError) this.onError('Invalid URL: ' + e.message);
       return;
     }
     this.ws = ws;
     ws.binaryType = 'arraybuffer';
-    ws.addEventListener('open',    () => this._onOpen(opts));
+    ws.addEventListener('open', () => {
+      this._onOpen(creds);
+      creds.username = undefined; // drop references the moment the CONNECT packet is sent
+      creds.password = undefined;
+    });
     ws.addEventListener('message', e  => this._recv(new Uint8Array(e.data)));
     ws.addEventListener('error',   ()  => {
       if (this.onError) this.onError('WebSocket connection failed — verify broker address, port, WebSocket path, and that the broker has WebSocket support enabled');
@@ -197,16 +204,19 @@ function _encStr(str) {
 
 // ─── App State ───────────────────────────────────────────────────────────────
 
+const SESSION_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
+
 const app = {
-  client:        null,
-  connected:     false,
-  connecting:    false,
-  connectTime:   null,
-  subscriptions: [],         // active filter strings
-  tree:          _makeNode(), // root (no segment of its own)
-  totalMsgs:     0,
-  topicSet:      new Set(),
-  clockTick:     null,
+  client:         null,
+  connected:      false,
+  connecting:     false,
+  connectTime:    null,
+  subscriptions:  [],          // active filter strings
+  tree:           _makeNode(), // root (no segment of its own)
+  totalMsgs:      0,
+  topicSet:       new Set(),
+  clockTick:      null,
+  sessionTimeout: null,
 };
 
 function _makeNode() {
@@ -227,8 +237,6 @@ const _$ = id => document.getElementById(id);
 const els = {
   broker:      _$('mqttBroker'),
   port:        _$('mqttPort'),
-  path:        _$('mqttPath'),
-  proto:       _$('mqttProto'),
   username:    _$('mqttUsername'),
   password:    _$('mqttPassword'),
   connectBtn:  _$('mqttConnectBtn'),
@@ -262,9 +270,8 @@ function doConnect() {
   if (!broker) { _showError('Enter a broker address.'); return; }
 
   const port  = els.port.value.trim() || '1883';
-  const path  = els.path.value.trim() || '/mqtt';
-  const proto = els.proto.value;
-  const url   = `${proto}://${broker}:${port}${path.startsWith('/') ? path : '/' + path}`;
+  const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+  const url   = `${proto}://${location.host}/mqtt-proxy?host=${encodeURIComponent(broker)}&port=${encodeURIComponent(port)}`;
 
   _hideError();
   _setStatus('connecting');
@@ -274,10 +281,11 @@ function doConnect() {
   app.client = new MQTTWsClient();
 
   app.client.onConnect = () => {
-    els.password.value = '';   // clear after broker has accepted credentials
-    app.connected   = true;
-    app.connecting  = false;
-    app.connectTime = Date.now();
+    els.password.value  = '';   // clear after broker has accepted credentials
+    app.connected       = true;
+    app.connecting      = false;
+    app.connectTime     = Date.now();
+    app.sessionTimeout  = setTimeout(_doSessionTimeout, SESSION_TIMEOUT_MS);
     _setStatus('connected', broker + ':' + port);
     els.connectBtn.textContent = 'Disconnect';
     els.subPanel.style.display = '';
@@ -289,6 +297,8 @@ function doConnect() {
   };
 
   app.client.onDisconnect = () => {
+    els.password.value = ''; // clear in case the broker dropped before CONNACK (onConnect never fired)
+    _clearSessionTimeout();
     const wasConn = app.connected;
     app.connected  = false;
     app.connecting = false;
@@ -300,6 +310,7 @@ function doConnect() {
 
   app.client.onError = msg => {
     els.password.value = '';   // clear on auth failure too — don't leave it in the DOM
+    _clearSessionTimeout();
     app.connected  = false;
     app.connecting = false;
     _showError(msg);
@@ -316,6 +327,7 @@ function doConnect() {
 }
 
 function doDisconnect() {
+  _clearSessionTimeout();
   if (app.client) { app.client.disconnect(); app.client = null; }
   app.connected  = false;
   app.connecting = false;
@@ -324,6 +336,25 @@ function doDisconnect() {
   els.subPanel.style.display = 'none';
   _stopClock();
 }
+
+function _clearSessionTimeout() {
+  clearTimeout(app.sessionTimeout);
+  app.sessionTimeout = null;
+}
+
+function _doSessionTimeout() {
+  doDisconnect();
+  _showError('Session closed after 15 minutes. Click Connect to reconnect.');
+}
+
+// Disconnect cleanly when the user navigates away or closes the tab
+window.addEventListener('beforeunload', () => {
+  if (app.connected || app.connecting) doDisconnect();
+});
+// pagehide covers mobile browsers and bfcache cases where beforeunload doesn't fire
+window.addEventListener('pagehide', () => {
+  if (app.connected || app.connecting) doDisconnect();
+});
 
 
 // ─── Subscriptions ────────────────────────────────────────────────────────────

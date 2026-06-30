@@ -13,6 +13,14 @@ networks:
     external: true
 
 services:
+  mqtt-proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    image: nettools-mqtt-proxy:latest
+    container_name: mqtt-proxy
+    restart: unless-stopped
+
   fwctl:
     build:
       context: .
