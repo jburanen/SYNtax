@@ -117,6 +117,7 @@ Edit `GITHUB_USER`, `WEBHOOK_SECRET`, and other variables at the top of the scri
 - IKE debug Builder
 - Route-based VPN Configurator
 - routemap Builder
+- Skyline config builder
 
 ### Tangent projects that can't be browser local and might spin off
 
