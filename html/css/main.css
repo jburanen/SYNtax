@@ -1096,10 +1096,12 @@ select.mono-input option { background: var(--bg-raised); }
 .tree-children { /* children are indented via padding-left on .tree-row */ }
 
 @media (max-width: 720px) {
-  .mqtt-conn-row   { flex-direction: column; }
+  .mqtt-conn-row   { flex-direction: column; align-items: stretch; }
   .mqtt-proto-group,
+  .mqtt-broker-group,
   .mqtt-port-group,
-  .mqtt-path-group { flex: 1 1 100%; }
+  .mqtt-path-group { flex: 1 1 auto; }
+  .mqtt-tree-actions { flex-wrap: wrap; }
   .tree-value { max-width: 180px; }
 }
 
