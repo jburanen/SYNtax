@@ -1,8 +1,8 @@
 /**
  * fw-zdebug.js — Check Point fw ctl zdebug drop command builder.
  *
- * Generates a fw ctl zdebug drop command with chained grep filter pipelines.
- * Each filter adds a grep stage: all active filters must match (AND logic).
+ * Generates a fw ctl zdebug drop command with pre-command flags and chained
+ * grep filter pipelines. Each grep filter adds a pipeline stage (AND logic).
  *
  * IP/CIDR filters are converted to grep -E patterns:
  *   10.0.0.1      → grep '10\.0\.0\.1'
@@ -21,6 +21,20 @@ const $ = id => document.getElementById(id);
 
 const optExtended   = $('optExtended');
 const optOutputFile = $('optOutputFile');
+
+// VSX options
+const vsxIdsInput    = $('vsxIds');
+const vsxKernelCheck = $('vsxKernel');
+
+// Stop / filter
+const optStopString  = $('optStopString');
+const optDebugFilter = $('optDebugFilter');
+
+// Advanced flags
+const optFrequency     = $('optFrequency');
+const optInspectFilter = $('optInspectFilter');
+const optKernelFilter  = $('optKernelFilter');
+const optHFilter       = $('optHFilter');
 
 const protoSelect  = $('proto');
 const srcHostInput = $('srcHost');
@@ -107,6 +121,23 @@ function parsePortInput(raw) {
   return { valid: false, error: 'Enter a port number (1–65535)' };
 }
 
+// Returns { valid, value, error? } — value is normalized "1,2,3" or null
+function parseVsIds(raw) {
+  const s = (raw || '').trim();
+  if (!s) return { valid: true, value: null };
+  const parts = s.split(',').map(p => p.trim()).filter(Boolean);
+  if (!parts.length) return { valid: true, value: null };
+  if (parts.some(p => !/^\d+$/.test(p)))
+    return { valid: false, error: 'VS IDs must be comma-separated integers (e.g. 1,2,5)' };
+  return { valid: true, value: parts.join(',') };
+}
+
+// ── Shell quoting ─────────────────────────────────────────────
+
+function shellSingleQuote(s) {
+  return `'${s.replace(/'/g, "'\\''")}'`;
+}
+
 // ── IP → grep pattern conversion ─────────────────────────────
 
 // Converts a parsed host result into a grep pattern.
@@ -178,6 +209,7 @@ function buildCommand() {
   const dstPortR = parsePortInput(dstPortInput.value);
   const hostR    = parseHostInput(hostInput.value);
   const portR    = parsePortInput(portInput.value);
+  const vsR      = parseVsIds(vsxIdsInput.value);
 
   setFieldMsg(srcHostInput, 'srcHostMsg', srcHostR);
   setFieldMsg(srcPortInput, 'srcPortMsg', srcPortR);
@@ -185,15 +217,48 @@ function buildCommand() {
   setFieldMsg(dstPortInput, 'dstPortMsg', dstPortR);
   setFieldMsg(hostInput,    'hostMsg',    hostR);
   setFieldMsg(portInput,    'portMsg',    portR);
+  setFieldMsg(vsxIdsInput,  'vsxIdsMsg',  vsR);
 
-  const hasErrors = [srcHostR, srcPortR, dstHostR, dstPortR, hostR, portR].some(r => !r.valid);
+  const hasErrors = [srcHostR, srcPortR, dstHostR, dstPortR, hostR, portR, vsR].some(r => !r.valid);
+
+  // ── Pre-command flags (inserted before [+] drop) ──
+  const preFlags = [];
+
+  // VSX: -v <vsids> [-k]
+  if (vsR.valid && vsR.value) preFlags.push(`-v ${vsR.value}`);
+  if (vsxKernelCheck.checked) preFlags.push('-k');
+
+  // Stop on string: -s "string"
+  const stopStr = (optStopString.value || '').trim();
+  if (stopStr) preFlags.push(`-s ${shellSingleQuote(stopStr)}`);
+
+  // Debug string filter: -d "str1,str2,^excl"
+  const debugFilter = (optDebugFilter.value || '').trim();
+  if (debugFilter) preFlags.push(`-d ${shellSingleQuote(debugFilter)}`);
+
+  // Frequency threshold: -f RARE|COMMON
+  const freq = optFrequency.value;
+  if (freq) preFlags.push(`-f ${freq}`);
+
+  // INSPECT filter: -e "script"
+  const inspectFilter = (optInspectFilter.value || '').trim();
+  if (inspectFilter) preFlags.push(`-e ${shellSingleQuote(inspectFilter)}`);
+
+  // Kernel debug filter: -F
+  const kFilter = (optKernelFilter.value || '').trim();
+  if (kFilter) preFlags.push(`-F ${shellSingleQuote(kFilter)}`);
+
+  // -H filter
+  const hFilter = (optHFilter.value || '').trim();
+  if (hFilter) preFlags.push(`-H ${shellSingleQuote(hFilter)}`);
 
   // ── Base command ──
-  const base = optExtended.checked ? 'fw ctl zdebug + drop' : 'fw ctl zdebug drop';
+  const extFlag      = optExtended.checked ? '+ ' : '';
+  const preFlagsStr  = preFlags.length ? preFlags.join(' ') + ' ' : '';
+  const base         = `fw ctl zdebug ${preFlagsStr}${extFlag}drop`;
 
   // ── Build grep pipeline stages ──
   // Each stage: { flag: string, pattern: string }
-  // flag is the grep flag(s) string (e.g. '-E', '-i', '')
   const stages = [];
 
   // Protocol — zdebug R80+ outputs "proto=N"
@@ -294,6 +359,9 @@ function updateCommand() {
 
 const allInputs = [
   optExtended, optOutputFile,
+  vsxIdsInput, vsxKernelCheck,
+  optStopString, optDebugFilter,
+  optFrequency, optInspectFilter, optKernelFilter, optHFilter,
   protoSelect,
   srcHostInput, srcPortInput,
   dstHostInput, dstPortInput,

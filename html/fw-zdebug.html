@@ -28,7 +28,7 @@
     <div class="tool-view" id="tool-fw-zdebug">
       <div class="tool-header">
         <h1 class="tool-title">fw ctl zdebug Builder</h1>
-        <p class="tool-desc">Build Check Point <code style="color:var(--cyan);font-size:inherit">fw ctl zdebug drop</code> commands with chained <code style="color:var(--cyan);font-size:inherit">grep</code> filter pipelines. Narrows real-time kernel drop output to matching source/destination addresses, ports, protocols, and drop reasons. Run in expert mode on the gateway or Security Management Server.</p>
+        <p class="tool-desc">Build Check Point <code style="color:var(--cyan);font-size:inherit">fw ctl zdebug drop</code> commands with chained <code style="color:var(--cyan);font-size:inherit">grep</code> filter pipelines. Narrows real-time kernel drop output to matching source/destination addresses, ports, protocols, and drop reasons. Supports VSX virtual system targeting, stop-on-string, kernel debug filters, and INSPECT filters. Run in expert mode on the gateway or Security Management Server.</p>
       </div>
 
       <div class="tool-body">
@@ -61,7 +61,119 @@
             </label>
           </div>
 
-          <div class="input-group" style="margin-top:10px">
+          <!-- VSX -->
+          <div style="margin-top:16px">
+            <div class="filter-section-label" style="margin-bottom:8px">VSX</div>
+            <div class="tcpdump-row">
+              <div class="input-group">
+                <label class="field-label" for="vsxIds">Virtual Systems (-v)</label>
+                <input
+                  type="text"
+                  id="vsxIds"
+                  class="mono-input"
+                  placeholder="e.g. 1,2,5"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <div class="field-msg" id="vsxIdsMsg"></div>
+                <div class="input-hint">Comma-separated VS IDs — limits debug to specified virtual systems</div>
+              </div>
+              <div class="input-group" style="display:flex;align-items:flex-end;padding-bottom:4px">
+                <label class="toggle-row">
+                  <input type="checkbox" id="vsxKernel" class="toggle-check" />
+                  <span class="toggle-label">
+                    <span class="toggle-flag">-k</span>
+                    Include kernel / SecureXL entities not bound to a specific VS
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stop / Filter -->
+          <div style="margin-top:16px">
+            <div class="filter-section-label" style="margin-bottom:8px">STOP / FILTER</div>
+            <div class="input-group">
+              <label class="field-label" for="optStopString">Stop on string (-s)</label>
+              <input
+                type="text"
+                id="optStopString"
+                class="mono-input"
+                placeholder="e.g. conn_failed"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <div class="input-hint">Debug halts when this string appears in output — run <code style="color:var(--cyan)">fw ctl debug 0</code> afterward to reset flags and avoid performance impact</div>
+            </div>
+            <div class="input-group" style="margin-top:10px">
+              <label class="field-label" for="optDebugFilter">Debug string filter (-d)</label>
+              <input
+                type="text"
+                id="optDebugFilter"
+                class="mono-input"
+                placeholder="str1,str2,^exclude1,^exclude2"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <div class="input-hint">Comma-separated — plain terms are included, <code style="color:var(--cyan)">^</code>-prefixed terms are excluded · e.g. <code style="color:var(--cyan)">error,conn,^RST</code> shows messages with "error" or "conn" but not "RST" · more efficient than post-processing with grep</div>
+            </div>
+          </div>
+
+          <!-- Advanced flags -->
+          <div style="margin-top:16px">
+            <div class="filter-section-label" style="margin-bottom:8px">ADVANCED FLAGS</div>
+            <div class="tcpdump-row">
+              <div class="input-group">
+                <label class="field-label" for="optFrequency">Frequency threshold (-f)</label>
+                <select id="optFrequency" class="mono-input">
+                  <option value="">default — show all</option>
+                  <option value="RARE">RARE — rare messages only</option>
+                  <option value="COMMON">COMMON — common and below</option>
+                </select>
+                <div class="input-hint">Distinct frequencies only in the 'VPN' module — no effect on other modules</div>
+              </div>
+              <div class="input-group">
+                <label class="field-label" for="optInspectFilter">INSPECT filter (-e)</label>
+                <input
+                  type="text"
+                  id="optInspectFilter"
+                  class="mono-input"
+                  placeholder='e.g. accept tcp, first;'
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <div class="input-hint">FireWall-only — does not filter SecureXL debug (use -F for that)</div>
+              </div>
+            </div>
+            <div class="tcpdump-row" style="margin-top:10px">
+              <div class="input-group">
+                <label class="field-label" for="optKernelFilter">Kernel debug filter (-F)</label>
+                <input
+                  type="text"
+                  id="optKernelFilter"
+                  class="mono-input"
+                  placeholder="see Security Gateway Guide"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <div class="input-hint">Also filters SecureXL debug · see Security Gateway Guide › Kernel Debug Filters</div>
+              </div>
+              <div class="input-group">
+                <label class="field-label" for="optHFilter">Debug filter (-H)</label>
+                <input
+                  type="text"
+                  id="optHFilter"
+                  class="mono-input"
+                  placeholder="see Security Gateway Guide"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <div class="input-hint">See Security Gateway Guide › Kernel Debug Filters</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group" style="margin-top:16px">
             <label class="field-label" for="optOutputFile">Capture to file (tee)</label>
             <input
               type="text"
