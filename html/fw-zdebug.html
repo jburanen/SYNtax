@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <title>NetTools — fw ctl zdebug Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <div id="sidebar-mount"></div>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">☰</button>
+        <div class="breadcrumb">
+          <span class="bc-root">// command builders</span>
+          <span class="bc-sep">/</span>
+          <span class="bc-current">fw-ctl-zdebug-builder</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="tool-view" id="tool-fw-zdebug">
+      <div class="tool-header">
+        <h1 class="tool-title">fw ctl zdebug Builder</h1>
+        <p class="tool-desc">Build Check Point <code style="color:var(--cyan);font-size:inherit">fw ctl zdebug drop</code> commands with chained <code style="color:var(--cyan);font-size:inherit">grep</code> filter pipelines. Narrows real-time kernel drop output to matching source/destination addresses, ports, protocols, and drop reasons. Run in expert mode on the gateway or Security Management Server.</p>
+      </div>
+
+      <div class="tool-body">
+
+        <!-- Generated Command -->
+        <section class="panel" id="cmdPanel">
+          <div class="panel-label">// generated command</div>
+          <div class="cmd-output">
+            <span class="cmd-prompt">$</span>
+            <code id="cmdText">fw ctl zdebug drop</code>
+          </div>
+          <div class="cmd-actions">
+            <button class="btn-primary" id="copyBtn">Copy Command</button>
+            <span class="copy-feedback" id="copyFeedback"></span>
+            <span class="auto-copy-note" id="autoCopyNote"></span>
+          </div>
+        </section>
+
+        <!-- zdebug Options -->
+        <section class="panel input-panel">
+          <div class="panel-label">// zdebug options</div>
+
+          <div class="option-toggles">
+            <label class="toggle-row">
+              <input type="checkbox" id="optExtended" class="toggle-check" />
+              <span class="toggle-label">
+                <span class="toggle-flag">+</span>
+                Extended output — shows drop context: kernel function, blade, rule number
+              </span>
+            </label>
+          </div>
+
+          <div class="input-group" style="margin-top:10px">
+            <label class="field-label" for="optOutputFile">Capture to file (tee)</label>
+            <input
+              type="text"
+              id="optOutputFile"
+              class="mono-input"
+              placeholder="omit to print to stdout only"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <div class="input-hint">
+              Uses <code style="color:var(--cyan)">tee</code> — output appears on screen and is saved simultaneously ·
+              <span class="hint-val" id="fillDefaultPath">use default path</span>
+              · <span class="hint-val" id="clearOutput">clear</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Grep Filters -->
+        <section class="panel input-panel">
+          <div class="panel-label">// grep filters</div>
+          <div class="input-hint">Each filter adds a <code style="color:var(--cyan)">grep</code> stage to the pipeline. All active filters must match (AND logic). Fields left empty are skipped. Because zdebug is free-form kernel text, IP filters match the address anywhere in the line — combine source and destination filters for precise flow matching.</div>
+
+          <div class="input-group" style="margin-top:14px">
+            <label class="field-label" for="proto">Protocol</label>
+            <select id="proto" class="mono-input filter-proto">
+              <option value="">any</option>
+              <option value="6">tcp (proto=6)</option>
+              <option value="17">udp (proto=17)</option>
+              <option value="1">icmp (proto=1)</option>
+              <option value="50">esp (proto=50)</option>
+              <option value="51">ah (proto=51)</option>
+            </select>
+          </div>
+
+          <div class="filter-grid">
+            <div class="filter-section">
+              <div class="filter-section-label">SOURCE</div>
+              <div class="input-group">
+                <label class="field-label" for="srcHost">Host / IP</label>
+                <input
+                  type="text"
+                  id="srcHost"
+                  class="mono-input"
+                  placeholder="10.0.0.1 or 10.0.0.0/24"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <div class="field-msg" id="srcHostMsg"></div>
+              </div>
+              <div class="input-group">
+                <label class="field-label" for="srcPort">Source Port (sport)</label>
+                <input
+                  type="text"
+                  id="srcPort"
+                  class="mono-input"
+                  placeholder="e.g. 443"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <div class="field-msg" id="srcPortMsg"></div>
+              </div>
+            </div>
+
+            <div class="filter-section">
+              <div class="filter-section-label">DESTINATION</div>
+              <div class="input-group">
+                <label class="field-label" for="dstHost">Host / IP</label>
+                <input
+                  type="text"
+                  id="dstHost"
+                  class="mono-input"
+                  placeholder="10.0.0.2 or 192.168.0.0/16"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <div class="field-msg" id="dstHostMsg"></div>
+              </div>
+              <div class="input-group">
+                <label class="field-label" for="dstPort">Destination Port (dport)</label>
+                <input
+                  type="text"
+                  id="dstPort"
+                  class="mono-input"
+                  placeholder="e.g. 80"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <div class="field-msg" id="dstPortMsg"></div>
+              </div>
+            </div>
+
+            <div class="filter-section">
+              <div class="filter-section-label">EITHER DIRECTION</div>
+              <div class="input-group">
+                <label class="field-label" for="host">Host / IP</label>
+                <input
+                  type="text"
+                  id="host"
+                  class="mono-input"
+                  placeholder="src or dst, CIDR ok"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <div class="field-msg" id="hostMsg"></div>
+              </div>
+              <div class="input-group">
+                <label class="field-label" for="port">Port</label>
+                <input
+                  type="text"
+                  id="port"
+                  class="mono-input"
+                  placeholder="sport or dport"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <div class="field-msg" id="portMsg"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tcpdump-row" style="margin-top:14px">
+            <div class="input-group">
+              <label class="field-label" for="dropReason">Drop Reason</label>
+              <input
+                type="text"
+                id="dropReason"
+                class="mono-input"
+                placeholder="e.g. Policy Drop, pkt_sanity, Sanitize"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <div class="input-hint">Case-insensitive substring match — grep -i</div>
+            </div>
+            <div class="input-group">
+              <label class="field-label" for="iface">Interface</label>
+              <input
+                type="text"
+                id="iface"
+                class="mono-input"
+                placeholder="e.g. eth0, bond1"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <div class="input-hint">Matches interface name in zdebug output</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="js/sidebar.js"></script>
+  <script src="js/fw-zdebug.js"></script>
+</body>
+</html>

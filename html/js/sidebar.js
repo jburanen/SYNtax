@@ -43,11 +43,10 @@
       <span class="nav-label">cppcap</span>
       <span class="nav-badge">2 weeks</span>
     </div>
-    <div class="nav-item disabled" title="Coming soon">
+    <a href="fw-zdebug.html" class="nav-item" data-tool="fw-zdebug">
       <span class="nav-icon">⬡</span>
       <span class="nav-label">fw ctl zdebug</span>
-      <span class="nav-badge">2 weeks</span>
-    </div>
+    </a>
     <div class="nav-item disabled" title="Coming soon">
       <span class="nav-icon">⬡</span>
       <span class="nav-label">routemap</span>
@@ -89,7 +88,7 @@
 
   // Mark the active nav item based on the current page filename
   const page = window.location.pathname.split('/').pop() || 'index.html';
-  const toolMap = { 'subnet.html': 'subnet', 'tcpdump.html': 'tcpdump', 'fw-monitor.html': 'fw-monitor', 'compose-converter.html': 'compose-converter', 'mqtt.html': 'mqtt' };
+  const toolMap = { 'subnet.html': 'subnet', 'tcpdump.html': 'tcpdump', 'fw-monitor.html': 'fw-monitor', 'fw-zdebug.html': 'fw-zdebug', 'compose-converter.html': 'compose-converter', 'mqtt.html': 'mqtt' };
   const activeTool = toolMap[page];
   if (activeTool) {
     const link = document.querySelector(`.nav-item[data-tool="${activeTool}"]`);
