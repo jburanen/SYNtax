@@ -419,6 +419,7 @@ input  { font-family: var(--font); }
   border-radius: var(--radius);
   padding: 10px 14px;
   position: relative;
+  cursor: pointer;
   transition: border-color 0.15s;
 }
 .result-card:hover { border-color: var(--border-bright); }
@@ -463,52 +464,6 @@ input  { font-family: var(--font); }
 .result-card:hover .copy-btn { opacity: 1; }
 .copy-btn:hover { color: var(--cyan); border-color: var(--cyan-dim); }
 .copy-btn.copied { color: var(--green); border-color: var(--green); opacity: 1; }
-
-/* --- Address Map ------------------------------------------ */
-.map-legend {
-  display: flex;
-  gap: 18px;
-  font-size: 0.72rem;
-  color: var(--text-secondary);
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-}
-.legend-dot {
-  display: inline-block;
-  width: 8px; height: 8px;
-  border-radius: 1px;
-  margin-right: 5px;
-  vertical-align: middle;
-}
-.legend-dot.network   { background: var(--amber); }
-.legend-dot.broadcast { background: var(--red); }
-.legend-dot.usable    { background: var(--cyan); }
-
-.addr-map {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px;
-  min-height: 32px;
-}
-
-.addr-block {
-  height: 18px;
-  border-radius: 1px;
-  transition: opacity 0.2s;
-  cursor: default;
-  position: relative;
-}
-.addr-block.network   { background: var(--amber); }
-.addr-block.broadcast { background: var(--red); }
-.addr-block.usable    { background: var(--cyan); opacity: 0.55; }
-.addr-block:hover { opacity: 1 !important; }
-
-.map-note {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  margin-top: 10px;
-  line-height: 1.5;
-}
 
 /* --- Subnet Split ----------------------------------------- */
 .split-controls {
