@@ -204,37 +204,58 @@ function suggestNextSeq(excludeId) {
   return Math.max(...used) + 10;
 }
 
+function setPasteInfo(text, isError) {
+  pasteInfo.textContent = text;
+  pasteInfo.classList.toggle('error', !!isError);
+}
+
+// Distinct route-map names found in the paste, case-insensitive, keeping the
+// first-seen casing of each.
+function distinctPastedNames(parsed) {
+  const seen = new Map();
+  parsed.forEach(p => { if (!seen.has(p.name.toLowerCase())) seen.set(p.name.toLowerCase(), p.name); });
+  return [...seen.values()];
+}
+
 function updatePasteInfo() {
-  const parsed = parsePastedSeqs(pasteText.value);
-  if (!pasteText.value.trim()) {
-    pasteInfo.textContent = '';
+  const raw = pasteText.value;
+  if (!raw.trim()) {
+    setPasteInfo('', false);
     return;
   }
+
+  const parsed = parsePastedSeqs(raw);
   if (!parsed.length) {
-    pasteInfo.textContent = 'No route-map sequence numbers recognized in the pasted text.';
+    setPasteInfo('⚠ Could not recognize any route-map syntax in the pasted text — expected Gaia ("set route-map ...") or Cisco/Brocade/ICX ("route-map ...") entry lines.', true);
     return;
   }
+
+  const uniqueNames = distinctPastedNames(parsed);
+  if (uniqueNames.length > 1) {
+    setPasteInfo(`⚠ Pasted text contains ${uniqueNames.length} different route-maps: ${uniqueNames.join(', ')} — paste only one route-map at a time so sequence numbers can be checked correctly.`, true);
+    return;
+  }
+
+  const pastedName = uniqueNames[0];
+
+  // Learn the route-map name from the paste if the name field is still empty.
+  if (!parseRouteMapName(rmNameInput.value).valid) {
+    rmNameInput.value = pastedName;
+  }
+
   const nameR = parseRouteMapName(rmNameInput.value);
-  if (!nameR.valid) {
-    const byName = {};
-    parsed.forEach(p => { (byName[p.name] = byName[p.name] || []).push(p.seq); });
-    const summary = Object.entries(byName)
-      .map(([n, seqs]) => `${n} (${seqs.sort((a, b) => a - b).join(', ')})`)
-      .join('; ');
-    pasteInfo.textContent = `Found: ${summary} — enter a route-map name above to check for collisions.`;
+  if (nameR.valid && nameR.value.toLowerCase() !== pastedName.toLowerCase()) {
+    setPasteInfo(`⚠ Pasted route-map is named "${pastedName}", which doesn't match the route-map name above ("${nameR.value}") — its sequence numbers won't be checked for collisions.`, true);
     return;
   }
+
   const relevant = relevantPastedSeqs().map(p => p.seq).sort((a, b) => a - b);
-  if (!relevant.length) {
-    pasteInfo.textContent = `No entries for "${nameR.value}" found in the pasted text — new sequence numbers are unconstrained.`;
-    return;
-  }
   const collidesWithEntries = entries.filter(e => relevant.includes(e.seq));
-  let msg = `Existing sequence numbers for "${nameR.value}": ${relevant.join(', ')}.`;
+  let msg = `Existing sequence numbers for "${pastedName}": ${relevant.join(', ')}.`;
   if (collidesWithEntries.length) {
     msg += ` ⚠ collides with entry already added: ${collidesWithEntries.map(e => e.seq).join(', ')}`;
   }
-  pasteInfo.textContent = msg;
+  setPasteInfo(msg, collidesWithEntries.length > 0);
 }
 
 // ── Entry form read/validate ─────────────────────────────────

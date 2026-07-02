@@ -1006,6 +1006,7 @@ details.collapsible-section > .collapsible-body {
 }
 
 .compose-output-pre.has-errors { border-color: rgba(230,168,23,0.5); }
+.input-hint.error { color: var(--red); }
 .compose-output-pre.rm-output-empty {
   color: var(--text-muted);
   font-style: italic;
