@@ -18,8 +18,13 @@ html/                  # Web root (nginx bind-mount)
     fw-zdebug.js       # fw ctl zdebug builder
     compose-converter.js
     mqtt-client.js
-nginx/default.conf     # CSP headers, proxy config
+nginx/default.conf     # CSP headers, proxy config, /generated/ location
 proxy/server.js        # Node.js WebSocket↔MQTT tunnel
+docker/                # .env theming — rendered into the container at startup
+  theme.css.template   #   :root color/font/size overrides
+  config.js.template   #   site title / tab title
+  40-nettools-config.sh#   entrypoint script: defaults + envsubst render
+.env.example           # Documented, all-optional theming vars (copy to .env)
 docker-compose.yml
 Dockerfile
 deploy.ps1
@@ -28,7 +33,7 @@ server-setup.sh
 
 ## Adding a New Tool
 
-1. Create `html/tool-name.html` — copy the topbar/sidebar-mount/main-content shell from an existing tool
+1. Create `html/tool-name.html` — copy the topbar/sidebar-mount/main-content shell from an existing tool (this includes the `/generated/theme.css` link and `/generated/config.js` script — keep both; see Theming)
 2. Create `html/js/tool-name.js`
 3. Add a nav entry to the sidebar HTML block inside `sidebar.js`
 4. Add a tool card to `index.html`
@@ -127,6 +132,7 @@ Defined in `:root` at the top of `main.css`:
 ```
 --bg-base, --bg-surface, --bg-raised, --bg-hover
 --border, --border-bright
+--input-bg                              # text input / select background
 --cyan, --cyan-dim, --cyan-glow
 --amber, --red, --green
 --text-primary, --text-secondary, --text-muted
@@ -134,7 +140,13 @@ Defined in `:root` at the top of `main.css`:
 --topbar-h: 52px
 --radius: 4px
 --font: 'JetBrains Mono', monospace
+--fs-base: 14px                         # root font-size; scales all rem text
+--fs-title, --fs-body, --fs-label, --fs-small, --fs-nav   # per-role text sizes
 ```
+
+The values here are the built-in defaults **and** the no-Docker fallback. At
+container startup `/generated/theme.css` re-declares `:root` with the `.env`
+values and is loaded after `main.css`, so it wins. See Theming below.
 
 ## Key CSS Classes
 
@@ -202,6 +214,38 @@ Most complex tool. Key points:
 - `parseVsIds(raw)` — validates comma-separated integers for `-v` VSX flag
 - VSX, Stop/Filter, Advanced Flags, and Capture-to-file sections are collapsible (`<details>`), collapsed by default
 - `allNotToggles` array drives both click wiring and reset-all cleanup
+
+## Theming (.env)
+
+Admins can override branding and styles without touching source. Because there
+is no build step and `html/` is a **read-only** bind mount, env vars are turned
+into static assets **at container startup**:
+
+```
+.env  →  docker-compose environment:  →  container
+      →  docker/40-nettools-config.sh (envsubst)
+      →  /usr/share/nginx/generated/{theme.css,config.js}
+      →  served at /generated/…  →  loaded by every page
+```
+
+- **All vars are optional.** No `.env`, an empty `.env`, or any unset var → the
+  built-in default. `docker/40-nettools-config.sh` is the **single source of
+  defaults** (they mirror `main.css`); `.env.example` documents them.
+- Missing `.env` never errors — `docker-compose.yml` passes each var as
+  `${VAR:-}`, and the entrypoint's `: "${VAR:=default}"` fills the blank.
+- `theme.css` re-declares `:root` (colors, `--input-bg`, `--font`, `--fs-*`);
+  loaded after `main.css` so it wins. `config.js` sets `window.NETTOOLS_CONFIG`
+  (`siteTitle` → sidebar logo via `sidebar.js`; `tabTitle` → swaps the
+  "NetTools" prefix in each page's `<title>`). Title vars default to empty, so
+  page text is left as-authored unless set.
+- Vars: `SITE_TITLE`, `TAB_TITLE`, `COLOR_PRIMARY/WARNING/ERROR/BG/INPUT_BG/BORDER`,
+  `FONT_FAMILY`, `TEXT_BASE_SIZE` (scales all rem text) + `TEXT_TITLE/BODY/LABEL/SMALL/NAV_SIZE`.
+- Adding a new var: add a default in `40-nettools-config.sh`, a placeholder in
+  the relevant template + its envsubst var list, a passthrough line in
+  `docker-compose.yml`, and a documented entry in `.env.example`.
+- The two `<link>`/`<script>` tags for `/generated/` live in **every** `*.html`
+  (theme.css after main.css; config.js before sidebar.js) — add them when
+  creating a new tool page.
 
 ## Deployment
 

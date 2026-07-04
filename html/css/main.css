@@ -26,16 +26,28 @@
   --text-secondary:#94aecb;
   --text-muted:    #647d9a;
 
+  --input-bg:      #0b0e14;
+
   --radius:        4px;
   --sidebar-w:     240px;
   --topbar-h:      52px;
 
   --font: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  /* Text-size roles — overridable via .env (see /generated/theme.css).
+     --fs-base drives the root font-size, so it scales all rem-based
+     text; the role tokens below fine-tune individual text roles. */
+  --fs-base:  14px;
+  --fs-title: 1.4rem;
+  --fs-body:  0.9rem;
+  --fs-label: 0.85rem;
+  --fs-small: 0.7rem;
+  --fs-nav:   1rem;
 }
 
 /* --- Reset ------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 14px; }
+html { font-size: var(--fs-base); }
 body {
   font-family: var(--font);
   background: var(--bg-base);
@@ -107,7 +119,7 @@ input  { font-family: var(--font); }
   gap: 10px;
   padding: 9px 16px;
   color: var(--text-primary);
-  font-size: 1rem;
+  font-size: var(--fs-nav);
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
   border-left: 2px solid transparent;
@@ -250,7 +262,7 @@ input  { font-family: var(--font); }
 
 .tool-header { margin-bottom: 28px; }
 .tool-title {
-  font-size: 1.4rem;
+  font-size: var(--fs-title);
   font-weight: 600;
   color: var(--text-primary);
   letter-spacing: 0.02em;
@@ -305,19 +317,19 @@ input  { font-family: var(--font); }
 
 .field-label {
   display: block;
-  font-size: 0.85rem;
+  font-size: var(--fs-label);
   color: var(--text-secondary);
   margin-bottom: 7px;
   letter-spacing: 0.04em;
 }
 
 .mono-input {
-  background: var(--bg-base);
+  background: var(--input-bg);
   border: 1px solid var(--border-bright);
   color: var(--text-primary);
   padding: 10px 14px;
   border-radius: var(--radius);
-  font-size: 0.9rem;
+  font-size: var(--fs-body);
   width: 100%;
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
@@ -344,7 +356,7 @@ input  { font-family: var(--font); }
 .input-row .mono-input { flex: 1; }
 
 .input-hint {
-  font-size: 0.7rem;
+  font-size: var(--fs-small);
   color: var(--text-muted);
   margin-top: 8px;
 }

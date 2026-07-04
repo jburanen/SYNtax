@@ -1,0 +1,27 @@
+/* ============================================================
+   NetTools — generated theme overrides
+   Rendered from this template at container startup by
+   docker/40-nettools-config.sh (envsubst). Served at
+   /generated/theme.css and loaded AFTER css/main.css so these
+   :root values win. Values come from the .env file; anything
+   unset falls back to the defaults baked into the entrypoint
+   script (which mirror css/main.css). Do not edit by hand —
+   change .env instead.
+   ============================================================ */
+:root {
+  --bg-base:   ${COLOR_BG};
+  --input-bg:  ${COLOR_INPUT_BG};
+  --border:    ${COLOR_BORDER};
+  --cyan:      ${COLOR_PRIMARY};
+  --amber:     ${COLOR_WARNING};
+  --red:       ${COLOR_ERROR};
+
+  --font:      ${FONT_FAMILY};
+
+  --fs-base:   ${TEXT_BASE_SIZE};
+  --fs-title:  ${TEXT_TITLE_SIZE};
+  --fs-body:   ${TEXT_BODY_SIZE};
+  --fs-label:  ${TEXT_LABEL_SIZE};
+  --fs-small:  ${TEXT_SMALL_SIZE};
+  --fs-nav:    ${TEXT_NAV_SIZE};
+}

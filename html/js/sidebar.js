@@ -86,6 +86,16 @@
   const mount = document.getElementById('sidebar-mount');
   if (mount) mount.outerHTML = html;
 
+  // Optional custom brand text from /generated/config.js (.env-driven).
+  // When unset, the built-in two-tone NETTOOLS logo is left as-is.
+  const cfg = window.NETTOOLS_CONFIG || {};
+  if (cfg.siteTitle) {
+    const logoText = document.querySelector('.logo-text');
+    const logoAccent = document.querySelector('.logo-accent');
+    if (logoText) logoText.textContent = cfg.siteTitle;
+    if (logoAccent) logoAccent.textContent = '';
+  }
+
   // Mark the active nav item based on the current page filename
   const page = window.location.pathname.split('/').pop() || 'index.html';
   const toolMap = { 'subnet.html': 'subnet', 'tcpdump.html': 'tcpdump', 'fw-monitor.html': 'fw-monitor', 'fw-zdebug.html': 'fw-zdebug', 'compose-converter.html': 'compose-converter', 'mqtt.html': 'mqtt', 'routemap.html': 'routemap' };
