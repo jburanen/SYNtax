@@ -8,8 +8,10 @@
    text is left untouched. Do not edit by hand — change .env.
    ============================================================ */
 window.NETTOOLS_CONFIG = {
-  siteTitle: "${SITE_TITLE}",
-  tabTitle:  "${TAB_TITLE}"
+  logoText:   "${LOGO_TEXT}",
+  logoAccent: "${LOGO_ACCENT}",
+  logoSub:    "${LOGO_SUB}",
+  tabTitle:   "${TAB_TITLE}"
 };
 
 (function () {

@@ -33,7 +33,9 @@ services:
     # startup script (docker/40-nettools-config.sh) applies defaults.
     # See .env.example for the full list and documentation.
     environment:
-      - SITE_TITLE=${SITE_TITLE:-}
+      - LOGO_TEXT=${LOGO_TEXT:-}
+      - LOGO_ACCENT=${LOGO_ACCENT:-}
+      - LOGO_SUB=${LOGO_SUB:-}
       - TAB_TITLE=${TAB_TITLE:-}
       - COLOR_PRIMARY=${COLOR_PRIMARY:-}
       - COLOR_WARNING=${COLOR_WARNING:-}

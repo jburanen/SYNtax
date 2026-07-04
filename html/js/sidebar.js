@@ -87,13 +87,20 @@
   if (mount) mount.outerHTML = html;
 
   // Optional custom brand text from /generated/config.js (.env-driven).
-  // When unset, the built-in two-tone NETTOOLS logo is left as-is.
+  // logoText keeps the primary color, logoAccent keeps the cyan accent —
+  // each overrides independently; unset spans keep the built-in NET/TOOLS.
   const cfg = window.NETTOOLS_CONFIG || {};
-  if (cfg.siteTitle) {
-    const logoText = document.querySelector('.logo-text');
-    const logoAccent = document.querySelector('.logo-accent');
-    if (logoText) logoText.textContent = cfg.siteTitle;
-    if (logoAccent) logoAccent.textContent = '';
+  if (cfg.logoText) {
+    const el = document.querySelector('.logo-text');
+    if (el) el.textContent = cfg.logoText;
+  }
+  if (cfg.logoAccent) {
+    const el = document.querySelector('.logo-accent');
+    if (el) el.textContent = cfg.logoAccent;
+  }
+  if (cfg.logoSub) {
+    const el = document.querySelector('.logo-sub');
+    if (el) el.textContent = cfg.logoSub;
   }
 
   // Mark the active nav item based on the current page filename

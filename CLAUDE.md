@@ -235,10 +235,11 @@ into static assets **at container startup**:
   `${VAR:-}`, and the entrypoint's `: "${VAR:=default}"` fills the blank.
 - `theme.css` re-declares `:root` (colors, `--input-bg`, `--font`, `--fs-*`);
   loaded after `main.css` so it wins. `config.js` sets `window.NETTOOLS_CONFIG`
-  (`siteTitle` → sidebar logo via `sidebar.js`; `tabTitle` → swaps the
-  "NetTools" prefix in each page's `<title>`). Title vars default to empty, so
-  page text is left as-authored unless set.
-- Vars: `SITE_TITLE`, `TAB_TITLE`, `COLOR_PRIMARY/WARNING/ERROR/BG/INPUT_BG/BORDER`,
+  (`logoText`/`logoAccent` → the two sidebar logo spans, `logoSub` → the
+  muted subtitle line, all via `sidebar.js`; `tabTitle` → swaps the "NetTools"
+  prefix in each page's `<title>`). These brand vars default to empty, so page
+  text is left as-authored unless set.
+- Vars: `LOGO_TEXT`, `LOGO_ACCENT`, `LOGO_SUB`, `TAB_TITLE`, `COLOR_PRIMARY/WARNING/ERROR/BG/INPUT_BG/BORDER`,
   `FONT_FAMILY`, `TEXT_BASE_SIZE` (scales all rem text) + `TEXT_TITLE/BODY/LABEL/SMALL/NAV_SIZE`.
 - Adding a new var: add a default in `40-nettools-config.sh`, a placeholder in
   the relevant template + its envsubst var list, a passthrough line in
