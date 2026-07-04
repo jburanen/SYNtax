@@ -241,6 +241,11 @@ into static assets **at container startup**:
   text is left as-authored unless set.
 - Vars: `LOGO_TEXT`, `LOGO_ACCENT`, `LOGO_SUB`, `TAB_TITLE`, `COLOR_PRIMARY/WARNING/ERROR/BG/INPUT_BG/BORDER`,
   `FONT_FAMILY`, `TEXT_BASE_SIZE` (scales all rem text) + `TEXT_TITLE/BODY/LABEL/SMALL/NAV_SIZE`.
+- `DISABLED_MODULES` — comma-separated tool slugs (filename base, e.g. `mqtt,routemap`);
+  all enabled by default. `config.js` removes disabled `.tool-card`s and redirects a
+  direct visit to a disabled tool page back to `index.html`; `sidebar.js` removes the
+  disabled `.nav-item`s (and any section header left empty). A new tool is enabled
+  automatically — no list to maintain.
 - Adding a new var: add a default in `40-nettools-config.sh`, a placeholder in
   the relevant template + its envsubst var list, a passthrough line in
   `docker-compose.yml`, and a documented entry in `.env.example`.

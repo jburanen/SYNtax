@@ -103,6 +103,22 @@
     if (el) el.textContent = cfg.logoSub;
   }
 
+  // Remove nav entries for modules disabled via .env (config.js has already
+  // normalized cfg.disabledModules to an array of slugs).
+  (cfg.disabledModules || []).forEach(slug => {
+    const item = document.querySelector(`.nav-item[data-tool="${slug}"]`);
+    if (item) item.remove();
+  });
+  // Drop any section header left with no nav items after removals.
+  document.querySelectorAll('.nav-section-label').forEach(label => {
+    let el = label.nextElementSibling, hasItem = false;
+    while (el && !el.classList.contains('nav-section-label')) {
+      if (el.classList.contains('nav-item')) { hasItem = true; break; }
+      el = el.nextElementSibling;
+    }
+    if (!hasItem) label.remove();
+  });
+
   // Mark the active nav item based on the current page filename
   const page = window.location.pathname.split('/').pop() || 'index.html';
   const toolMap = { 'subnet.html': 'subnet', 'tcpdump.html': 'tcpdump', 'fw-monitor.html': 'fw-monitor', 'fw-zdebug.html': 'fw-zdebug', 'compose-converter.html': 'compose-converter', 'mqtt.html': 'mqtt', 'routemap.html': 'routemap' };

@@ -8,17 +8,40 @@
    text is left untouched. Do not edit by hand — change .env.
    ============================================================ */
 window.NETTOOLS_CONFIG = {
-  logoText:   "${LOGO_TEXT}",
-  logoAccent: "${LOGO_ACCENT}",
-  logoSub:    "${LOGO_SUB}",
-  tabTitle:   "${TAB_TITLE}"
+  logoText:        "${LOGO_TEXT}",
+  logoAccent:      "${LOGO_ACCENT}",
+  logoSub:         "${LOGO_SUB}",
+  tabTitle:        "${TAB_TITLE}",
+  disabledModules: "${DISABLED_MODULES}"
 };
 
 (function () {
   var c = window.NETTOOLS_CONFIG;
+
   // Swap the "NetTools" brand prefix in the browser-tab title,
   // preserving each page's own "— Tool Name" suffix.
   if (c.tabTitle) {
     document.title = document.title.replace(/^NetTools/, c.tabTitle);
   }
+
+  // Normalize DISABLED_MODULES ("a, b,c") into a slug array. Slugs are the
+  // tool's filename base (also its nav data-tool / card href), e.g. "mqtt".
+  c.disabledModules = (c.disabledModules || '')
+    .split(',').map(function (s) { return s.trim().toLowerCase(); })
+    .filter(Boolean);
+
+  if (!c.disabledModules.length) return;
+
+  // Direct hit on a disabled tool page → bounce to the home grid.
+  var slug = (location.pathname.split('/').pop() || 'index.html').replace(/\.html$/, '');
+  if (slug && c.disabledModules.indexOf(slug) !== -1) {
+    location.replace('index.html');
+    return;
+  }
+
+  // Remove disabled tool cards from the home grid (sidebar.js handles nav).
+  document.querySelectorAll('.tool-card').forEach(function (card) {
+    var s = (card.getAttribute('href') || '').split('/').pop().replace(/\.html$/, '');
+    if (s && c.disabledModules.indexOf(s) !== -1) card.remove();
+  });
 })();
