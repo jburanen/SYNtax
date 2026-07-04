@@ -9,7 +9,9 @@
 
 networks:
   default:
-    name: proxy_net
+    # External Docker network to join (created by your reverse-proxy stack).
+    # Override with DOCKER_NETWORK in .env. Default: proxy_net
+    name: ${DOCKER_NETWORK:-proxy_net}
     external: true
 
 services:
@@ -26,7 +28,8 @@ services:
       context: .
       dockerfile: Dockerfile
     image: nettools:latest
-    container_name: fwctl
+    # Override with CONTAINER_NAME in .env. Default: nettools
+    container_name: ${CONTAINER_NAME:-nettools}
     restart: unless-stopped
     # Optional theming — values come from an (optional) .env file in
     # this directory. Anything unset arrives empty and the container's

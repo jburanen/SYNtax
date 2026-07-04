@@ -246,6 +246,10 @@ into static assets **at container startup**:
   direct visit to a disabled tool page back to `index.html`; `sidebar.js` removes the
   disabled `.nav-item`s (and any section header left empty). A new tool is enabled
   automatically — no list to maintain.
+- `CONTAINER_NAME` (default `nettools`) and `DOCKER_NETWORK` (default `proxy_net`) are
+  different: they're substituted by **docker-compose itself** (`${VAR:-default}` in
+  `docker-compose.yml`), not rendered by the entrypoint. Don't add them to the
+  `environment:` block or the templates.
 - Adding a new var: add a default in `40-nettools-config.sh`, a placeholder in
   the relevant template + its envsubst var list, a passthrough line in
   `docker-compose.yml`, and a documented entry in `.env.example`.
