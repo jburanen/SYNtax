@@ -1,7 +1,6 @@
 # NetTools
 
-Browser-local network utilities served by nginx in Docker.
-**No data ever leaves the user's browser.** All computation is pure client-side JavaScript.
+Modular collection of web-based tools hosted in Docker+Nginx. Most computation is pure client-side JavaScript. Can be public-facing or hosted internally for simple quick access. Designed to be hosted behind a reverse proxy such as <a href=https://github.com/NginxProxyManager/nginx-proxy-manager>NPM</a> if it is made publically available.
 
 ## Quick Start
 
@@ -69,7 +68,7 @@ networks:
     external: true
 ```
 
-If you don't use an external proxy network, remove the `networks` block from `docker-compose.yml` before starting.
+If you don't use an external proxy network, remove or comment the `networks` block from `docker-compose.yml` before starting.
 
 The `html/` directory and `nginx/default.conf` are bind-mounted read-only into the container, so you can edit files locally and see changes immediately without rebuilding (just reload the browser).
 
@@ -77,7 +76,7 @@ The `html/` directory and `nginx/default.conf` are bind-mounted read-only into t
 
 ### Automated deploy via GitHub webhook (server-setup.sh)
 
-`server-setup.sh` is a one-time setup script for an Ubuntu server that:
+`server-setup.sh` is a one-time setup script for an Ubuntu/Debian server that:
 
 1. Installs git, Docker, and the `webhook` daemon
 2. Clones the repo to the location you specify
