@@ -1,0 +1,28 @@
+# ── Environment / Secrets ────────────────────────────────────────────
+.env
+.env.*
+.env*.local
+secrets/
+
+# ── Certificates & Keys ──────────────────────────────────────────────
+*.pem
+*.key
+*.pfx
+*.p12
+*.crt
+*.cer
+*.der
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+id_ecdsa
+id_ecdsa.pub
+*.ppk
+
+# ── Docker ───────────────────────────────────────────────────────────
+docker-compose.override.yml
+
+# ── Claude Code local config ─────────────────────────────────────────
+.claude/settings.local.json
+.claude/mcp.json

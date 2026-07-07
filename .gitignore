@@ -1,15 +1,40 @@
-﻿# OS
+# ── OS ──────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 desktop.ini
+ehthumbs.db
 
-# Editor
+# ── VS Code ──────────────────────────────────────────────────────────
 .vscode/settings.json
+.vscode/launch.json
+.vscode/*.code-workspace
 *.swp
 *~
 
-# Secrets â€” never commit these
+# ── Claude Code ──────────────────────────────────────────────────────
+.claude/settings.local.json
+.claude/todos/
+.claude/mcp.json
+
+# ── Environment / Secrets ────────────────────────────────────────────
 *.pem
 *.key
+*.pfx
+*.p12
 .env
+.env.*
+.env*.local
 secrets/
+
+# ── Docker ───────────────────────────────────────────────────────────
+docker-compose.override.yml
+
+# ── Logs ─────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Node.js (if build tooling is added) ──────────────────────────────
+node_modules/
+dist/
+build/
+.npm/
