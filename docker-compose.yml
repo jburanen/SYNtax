@@ -9,17 +9,54 @@
 
 networks:
   default:
-    name: proxy_net
+    # External Docker network to join (created by your reverse-proxy stack).
+    # Override with DOCKER_NETWORK in .env. Default: proxy_net
+    name: ${DOCKER_NETWORK:-proxy_net}
     external: true
 
 services:
-  fwctl:
+  mqtt-proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    image: nettools-mqtt-proxy:latest
+    container_name: mqtt-proxy
+    restart: unless-stopped
+
+  nettools:
     build:
       context: .
       dockerfile: Dockerfile
     image: nettools:latest
-    container_name: fwctl
+    # Override with CONTAINER_NAME in .env. Default: nettools
+    # (the runtime container name; the service key above is static
+    #  because Compose can't substitute env vars into service keys.)
+    container_name: ${CONTAINER_NAME:-nettools}
     restart: unless-stopped
+    # Optional theming — values come from an (optional) .env file in
+    # this directory. Anything unset arrives empty and the container's
+    # startup script (docker/40-nettools-config.sh) applies defaults.
+    # See .env.example for the full list and documentation.
+    environment:
+      - LOGO_TEXT=${LOGO_TEXT:-}
+      - LOGO_ACCENT=${LOGO_ACCENT:-}
+      - LOGO_SUB=${LOGO_SUB:-}
+      - LOGO_LINK=${LOGO_LINK:-}
+      - TAB_TITLE=${TAB_TITLE:-}
+      - DISABLED_MODULES=${DISABLED_MODULES:-}
+      - COLOR_PRIMARY=${COLOR_PRIMARY:-}
+      - COLOR_WARNING=${COLOR_WARNING:-}
+      - COLOR_ERROR=${COLOR_ERROR:-}
+      - COLOR_BG=${COLOR_BG:-}
+      - COLOR_INPUT_BG=${COLOR_INPUT_BG:-}
+      - COLOR_BORDER=${COLOR_BORDER:-}
+      - FONT_FAMILY=${FONT_FAMILY:-}
+      - TEXT_BASE_SIZE=${TEXT_BASE_SIZE:-}
+      - TEXT_TITLE_SIZE=${TEXT_TITLE_SIZE:-}
+      - TEXT_BODY_SIZE=${TEXT_BODY_SIZE:-}
+      - TEXT_LABEL_SIZE=${TEXT_LABEL_SIZE:-}
+      - TEXT_SMALL_SIZE=${TEXT_SMALL_SIZE:-}
+      - TEXT_NAV_SIZE=${TEXT_NAV_SIZE:-}
     ports:
       - "0.0.0.0:8080:80"
     volumes:
@@ -31,3 +68,4 @@ services:
         source: ./nginx/default.conf
         target: /etc/nginx/conf.d/default.conf
         read_only: true
+        

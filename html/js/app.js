@@ -15,9 +15,6 @@ const calcBtn      = $('calcBtn');
 const errorBox     = $('errorBox');
 const resultsPanel = $('resultsPanel');
 const resultGrid   = $('resultGrid');
-const mapPanel     = $('mapPanel');
-const addrMap      = $('addrMap');
-const mapNote      = $('mapNote');
 const splitPanel   = $('splitPanel');
 const splitPrefix  = $('splitPrefix');
 const splitBtn     = $('splitBtn');
@@ -75,16 +72,13 @@ function runCalculation() {
 
     currentResult = result;
     renderResults(result);
-    renderMap(result);
     resultsPanel.style.display = '';
-    mapPanel.style.display     = '';
     splitPanel.style.display   = '';
     splitPrefix.value = Math.min(result.prefix + 1, 30);
 
   } catch (err) {
     showError(err.message);
     resultsPanel.style.display = 'none';
-    mapPanel.style.display     = 'none';
     splitPanel.style.display   = 'none';
   }
 }
@@ -93,22 +87,14 @@ function runCalculation() {
 
 function renderResults(r) {
   const cards = [
-    { label: 'Network Address', value: r.network,    sub: r.cidr,             cls: 'cyan',  highlight: true },
-    { label: 'Subnet Mask',     value: r.subnetMask, sub: `/${r.prefix}`,                              },
-    { label: 'Broadcast',       value: r.broadcast,  sub: 'last address',     cls: 'red'   },
-    { label: 'First Usable',    value: r.hostMin,    sub: r.prefix >= 31 ? '(point-to-point)' : '',    },
-    { label: 'Last Usable',     value: r.hostMax,    sub: '',                                           },
-    {
-      label: 'Usable Hosts',
-      value: Subnet.commas(r.usableHosts),
-      sub:   `${Subnet.commas(r.totalHosts)} total addresses`,
-      cls:   'green',
-      highlight: true,
-    },
-    { label: 'Wildcard Mask',   value: r.wildcard,   sub: 'inverse mask'                               },
-    { label: 'IP Class',        value: `Class ${r.legacyClass}`,  sub: 'legacy classful'               },
-    { label: 'RFC Scope',       value: r.rfc,        sub: '',     cls: r.rfc.includes('private') ? 'amber' : '' },
-    { label: 'Your IP',         value: r.ip,         sub: r.prefix < 32 ? 'host address entered' : 'host /32' },
+    { label: 'Network Address', value: r.network,    cls: 'cyan',  highlight: true },
+    { label: 'Subnet Mask',     value: r.subnetMask                               },
+    { label: 'Broadcast',       value: r.broadcast,  cls: 'red'   },
+    { label: 'First Usable',    value: r.hostMin                                  },
+    { label: 'Last Usable',     value: r.hostMax                                  },
+    { label: 'Usable Hosts',    value: Subnet.commas(r.usableHosts), cls: 'green', highlight: true },
+    { label: 'Wildcard Mask',   value: r.wildcard                                 },
+    { label: 'RFC Scope',       value: r.rfc,        cls: r.rfc.includes('private') ? 'amber' : '' },
   ];
 
   resultGrid.innerHTML = '';
@@ -119,12 +105,10 @@ function renderResults(r) {
       <button class="copy-btn" title="Copy">copy</button>
       <div class="result-label">${c.label}</div>
       <div class="result-value${c.cls ? ' ' + c.cls : ''}">${escHtml(c.value)}</div>
-      ${c.sub ? `<div class="result-sub">${escHtml(c.sub)}</div>` : ''}
     `;
 
     const copyBtn = card.querySelector('.copy-btn');
-    copyBtn.addEventListener('click', e => {
-      e.stopPropagation();
+    card.addEventListener('click', () => {
       navigator.clipboard.writeText(c.value).then(() => {
         copyBtn.textContent = 'copied!';
         copyBtn.classList.add('copied');
@@ -154,57 +138,6 @@ function renderResults(r) {
     </div>
   `;
   resultGrid.appendChild(binCard);
-}
-
-// ── Render address map ────────────────────────────────────────
-
-function renderMap(r) {
-  addrMap.innerHTML = '';
-  mapNote.textContent = '';
-
-  const total = r.totalHosts;
-
-  if (r.prefix < 8) {
-    mapNote.textContent =
-      `Address space too large to visualise (${Subnet.commas(total)} addresses). ` +
-      `Network: ${r.network}  Broadcast: ${r.broadcast}`;
-    return;
-  }
-
-  const MAX_BLOCKS = 512;
-  const blockSize  = Math.max(1, Math.ceil(total / MAX_BLOCKS));
-  const numBlocks  = Math.ceil(total / blockSize);
-
-  for (let i = 0; i < numBlocks; i++) {
-    const startAddr = r.networkInt + i * blockSize;
-    const endAddr   = Math.min(r.networkInt + (i + 1) * blockSize - 1, r.broadcastInt);
-
-    let cls;
-    if (startAddr === r.networkInt)   cls = 'network';
-    else if (endAddr === r.broadcastInt && r.prefix <= 30) cls = 'broadcast';
-    else cls = 'usable';
-
-    const block = document.createElement('div');
-    block.className = `addr-block ${cls}`;
-    const weight = (endAddr - startAddr + 1) / total * 100;
-    block.style.width = `${Math.max(weight, 0.1)}%`;
-
-    const startIp = intToIpSimple(startAddr);
-    const endIp   = intToIpSimple(endAddr);
-    block.title   = startAddr === endAddr ? startIp : `${startIp} – ${endIp}`;
-
-    addrMap.appendChild(block);
-  }
-
-  let noteText = `/${r.prefix} · ${Subnet.commas(total)} addresses`;
-  if (r.prefix <= 30) noteText += ` · ${Subnet.commas(r.usableHosts)} usable hosts`;
-  if (blockSize > 1)  noteText += ` · each block represents ${Subnet.commas(blockSize)} addresses`;
-  mapNote.textContent = noteText;
-}
-
-function intToIpSimple(n) {
-  n = n >>> 0;
-  return `${(n>>>24)&0xff}.${(n>>>16)&0xff}.${(n>>>8)&0xff}.${n&0xff}`;
 }
 
 // ── Subnet split ──────────────────────────────────────────────

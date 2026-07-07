@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="/generated/theme.css" />
 </head>
 <body>
   <div id="sidebar-mount"></div>
@@ -29,7 +30,7 @@
     <!-- Tool: Subnet Calculator -->
     <div class="tool-view" id="tool-subnet">
       <div class="tool-header">
-        <h1 class="tool-title">Subnet Calculator</h1>
+        <h1 class="tool-title">Subnet Calculator<span class="tool-version">v0.3.3</span></h1>
         <p class="tool-desc">Enter an IP address in CIDR notation or with a subnet mask. All calculations run in your browser — no data is transmitted.</p>
       </div>
 
@@ -72,18 +73,6 @@
           </div>
         </section>
 
-        <!-- Visual Map Panel -->
-        <section class="panel map-panel" id="mapPanel" style="display:none">
-          <div class="panel-label">// address space map</div>
-          <div class="map-legend">
-            <span><span class="legend-dot network"></span>Network</span>
-            <span><span class="legend-dot broadcast"></span>Broadcast</span>
-            <span><span class="legend-dot usable"></span>Usable hosts</span>
-          </div>
-          <div class="addr-map" id="addrMap"></div>
-          <div class="map-note" id="mapNote"></div>
-        </section>
-
         <!-- Subnet Split Panel -->
         <section class="panel split-panel" id="splitPanel" style="display:none">
           <div class="panel-label">// subnet split</div>
@@ -97,6 +86,7 @@
     </div>
   </main>
 
+  <script src="/generated/config.js"></script>
   <script src="js/sidebar.js"></script>
   <script src="js/subnet.js"></script>
   <script src="js/app.js"></script>

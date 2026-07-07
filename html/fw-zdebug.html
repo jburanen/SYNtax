@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <title>NetTools — fw ctl zdebug Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="/generated/theme.css" />
+</head>
+<body>
+  <div id="sidebar-mount"></div>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">☰</button>
+        <div class="breadcrumb">
+          <span class="bc-root">// command builders</span>
+          <span class="bc-sep">/</span>
+          <span class="bc-current">fw-ctl-zdebug-builder</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="tool-view" id="tool-fw-zdebug">
+      <div class="tool-header">
+        <h1 class="tool-title">fw ctl zdebug Builder<span class="tool-version">v0.4.0</span></h1>
+        <p class="tool-desc">Build Check Point <code style="color:var(--cyan);font-size:inherit">fw ctl zdebug drop</code> commands with chained <code style="color:var(--cyan);font-size:inherit">grep</code> filter pipelines. Narrows real-time kernel drop output to matching source/destination addresses, ports, protocols, and drop reasons. Supports VSX virtual system targeting, stop-on-string, kernel debug filters, and INSPECT filters. Run in expert mode on the gateway or Security Management Server.</p>
+      </div>
+
+      <div class="tool-body">
+
+        <!-- Generated Command -->
+        <section class="panel" id="cmdPanel">
+          <div class="panel-label">// generated command</div>
+          <div class="cmd-output">
+            <span class="cmd-prompt">$</span>
+            <code id="cmdText">fw ctl zdebug drop</code>
+          </div>
+          <div class="cmd-actions">
+            <button class="btn-primary" id="copyBtn">Copy Command</button>
+            <span class="copy-feedback" id="copyFeedback"></span>
+            <span class="auto-copy-note" id="autoCopyNote"></span>
+          </div>
+        </section>
+
+        <!-- zdebug Options -->
+        <section class="panel input-panel">
+          <div class="panel-label">// zdebug options</div>
+
+          <div class="option-toggles">
+            <label class="toggle-row">
+              <input type="checkbox" id="optExtended" class="toggle-check" checked/>
+              <span class="toggle-label">
+                Include PPAK drops (+)
+              </span>
+            </label>
+          </div>
+
+          <!-- VSX -->
+          <details class="collapsible-section">
+            <summary>VSX</summary>
+            <div class="collapsible-body">
+              <div class="tcpdump-row">
+                <div class="input-group">
+                  <label class="field-label" for="vsxIds">Virtual Systems (-v)</label>
+                  <input
+                    type="text"
+                    id="vsxIds"
+                    class="mono-input"
+                    placeholder="e.g. 1,2,5"
+                    autocomplete="off"
+                    spellcheck="false"
+                  />
+                  <div class="field-msg" id="vsxIdsMsg"></div>
+                  <div class="input-hint">Comma-separated VS IDs — limits debug to specified virtual systems</div>
+                </div>
+                <div class="input-group" style="display:flex;align-items:flex-end;padding-bottom:4px">
+                  <label class="toggle-row">
+                    <input type="checkbox" id="vsxKernel" class="toggle-check" />
+                    <span class="toggle-label">
+                      <span class="toggle-flag">-k</span>
+                      Include kernel / SecureXL entities not bound to a specific VS
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- Stop / Filter -->
+          <details class="collapsible-section">
+            <summary>STOP / FILTER</summary>
+            <div class="collapsible-body">
+              <div class="input-group">
+                <label class="field-label" for="optStopString">Stop on string (-s)</label>
+                <input
+                  type="text"
+                  id="optStopString"
+                  class="mono-input"
+                  placeholder="e.g. conn_failed"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <div class="input-hint">Debug halts when this string appears in output — run <code style="color:var(--cyan)">fw ctl debug 0</code> afterward to reset flags and avoid performance impact</div>
+              </div>
+              <div class="input-group" style="margin-top:10px">
+                <label class="field-label" for="optDebugFilter">Debug string filter (-d)</label>
+                <input
+                  type="text"
+                  id="optDebugFilter"
+                  class="mono-input"
+                  placeholder="str1,str2,^exclude1,^exclude2"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <div class="input-hint">Comma-separated — plain terms are included, <code style="color:var(--cyan)">^</code>-prefixed terms are excluded · e.g. <code style="color:var(--cyan)">error,conn,^RST</code> shows messages with "error" or "conn" but not "RST" · more efficient than post-processing with grep</div>
+              </div>
+            </div>
+          </details>
+
+          <!-- Advanced flags -->
+          <details class="collapsible-section">
+            <summary>ADVANCED FLAGS</summary>
+            <div class="collapsible-body">
+              <div class="tcpdump-row">
+                <div class="input-group">
+                  <label class="field-label" for="optFrequency">Frequency threshold (-f)</label>
+                  <select id="optFrequency" class="mono-input">
+                    <option value="">default — show all</option>
+                    <option value="RARE">RARE — rare messages only</option>
+                    <option value="COMMON">COMMON — common and below</option>
+                  </select>
+                  <div class="input-hint">Distinct frequencies only in the 'VPN' module — no effect on other modules</div>
+                </div>
+                <div class="input-group">
+                  <label class="field-label" for="optInspectFilter">INSPECT filter (-e)</label>
+                  <input
+                    type="text"
+                    id="optInspectFilter"
+                    class="mono-input"
+                    placeholder='e.g. accept tcp, first;'
+                    autocomplete="off"
+                    spellcheck="false"
+                  />
+                  <div class="input-hint">FireWall-only — does not filter SecureXL debug (use -F for that)</div>
+                </div>
+              </div>
+              <div class="tcpdump-row" style="margin-top:10px">
+                <div class="input-group">
+                  <label class="field-label" for="optKernelFilter">Kernel debug filter (-F)</label>
+                  <input
+                    type="text"
+                    id="optKernelFilter"
+                    class="mono-input"
+                    placeholder="see Security Gateway Guide"
+                    autocomplete="off"
+                    spellcheck="false"
+                  />
+                  <div class="input-hint">Also filters SecureXL debug · see Security Gateway Guide › Kernel Debug Filters</div>
+                </div>
+                <div class="input-group">
+                  <label class="field-label" for="optHFilter">Debug filter (-H)</label>
+                  <input
+                    type="text"
+                    id="optHFilter"
+                    class="mono-input"
+                    placeholder="see Security Gateway Guide"
+                    autocomplete="off"
+                    spellcheck="false"
+                  />
+                  <div class="input-hint">See Security Gateway Guide › Kernel Debug Filters</div>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- Capture to file -->
+          <details class="collapsible-section">
+            <summary>CAPTURE TO FILE</summary>
+            <div class="collapsible-body">
+              <input
+                type="text"
+                id="optOutputFile"
+                class="mono-input"
+                placeholder="omit to print to stdout only"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <div class="input-hint">
+                Uses <code style="color:var(--cyan)">tee</code> — output appears on screen and is saved simultaneously ·
+                <span class="hint-val" id="fillDefaultPath">use default path</span>
+                · <span class="hint-val" id="clearOutput">clear</span>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <!-- Grep Filters -->
+        <section class="panel input-panel">
+          <div class="panel-label">// grep filters</div>
+          <div class="input-hint">Each filter adds a <code style="color:var(--cyan)">grep</code> stage to the pipeline. All active filters must match (AND logic). Fields left empty are skipped. Because zdebug is free-form kernel text, IP filters match the address anywhere in the line — combine source and destination filters for precise flow matching.</div>
+
+          <div class="input-group" style="margin-top:14px">
+            <div class="field-label-row">
+              <label class="field-label" for="proto">Protocol</label>
+              <button type="button" class="not-toggle" id="protoNot" aria-pressed="false">NOT</button>
+            </div>
+            <div class="proto-row">
+              <select id="proto" class="mono-input filter-proto">
+                <option value="">any</option>
+                <option value="6">tcp (proto=6)</option>
+                <option value="17">udp (proto=17)</option>
+                <option value="1">icmp (proto=1)</option>
+                <option value="50">esp (proto=50)</option>
+                <option value="51">ah (proto=51)</option>
+              </select>
+              <button type="button" class="proto-clear-btn" id="clearProto" aria-label="Clear protocol">×</button>
+              <button type="button" class="filter-reset-btn" id="resetAllFilters">reset all grep filters</button>
+            </div>
+          </div>
+
+          <div class="filter-grid">
+            <div class="filter-section">
+              <div class="filter-section-label">SOURCE</div>
+              <div class="input-group">
+                <div class="field-label-row">
+                  <label class="field-label" for="srcHost">Host / IP</label>
+                  <button type="button" class="not-toggle" id="srcHostNot" aria-pressed="false">NOT</button>
+                </div>
+                <div class="input-wrap">
+                  <input
+                    type="text"
+                    id="srcHost"
+                    class="mono-input"
+                    placeholder="10.0.0.1 or 10.0.0.0/24"
+                    autocomplete="off"
+                    spellcheck="false"
+                  />
+                  <button type="button" class="input-clear-btn" data-clear="srcHost" aria-label="Clear">×</button>
+                </div>
+                <div class="field-msg" id="srcHostMsg"></div>
+              </div>
+              <div class="input-group">
+                <div class="field-label-row">
+                  <label class="field-label" for="srcPort">Source Port (sport)</label>
+                  <button type="button" class="not-toggle" id="srcPortNot" aria-pressed="false">NOT</button>
+                </div>
+                <div class="input-wrap">
+                  <input
+                    type="text"
+                    id="srcPort"
+                    class="mono-input"
+                    placeholder="e.g. 443"
+                    autocomplete="off"
+                    spellcheck="false"
+                  />
+                  <button type="button" class="input-clear-btn" data-clear="srcPort" aria-label="Clear">×</button>
+                </div>
+                <div class="field-msg" id="srcPortMsg"></div>
+              </div>
+            </div>
+
+            <div class="filter-section">
+              <div class="filter-section-label">DESTINATION</div>
+              <div class="input-group">
+                <div class="field-label-row">
+                  <label class="field-label" for="dstHost">Host / IP</label>
+                  <button type="button" class="not-toggle" id="dstHostNot" aria-pressed="false">NOT</button>
+                </div>
+                <div class="input-wrap">
+                  <input
+                    type="text"
+                    id="dstHost"
+                    class="mono-input"
+                    placeholder="10.0.0.2 or 192.168.0.0/16"
+                    autocomplete="off"
+                    spellcheck="false"
+                  />
+                  <button type="button" class="input-clear-btn" data-clear="dstHost" aria-label="Clear">×</button>
+                </div>
+                <div class="field-msg" id="dstHostMsg"></div>
+              </div>
+              <div class="input-group">
+                <div class="field-label-row">
+                  <label class="field-label" for="dstPort">Destination Port (dport)</label>
+                  <button type="button" class="not-toggle" id="dstPortNot" aria-pressed="false">NOT</button>
+                </div>
+                <div class="input-wrap">
+                  <input
+                    type="text"
+                    id="dstPort"
+                    class="mono-input"
+                    placeholder="e.g. 80"
+                    autocomplete="off"
+                    spellcheck="false"
+                  />
+                  <button type="button" class="input-clear-btn" data-clear="dstPort" aria-label="Clear">×</button>
+                </div>
+                <div class="field-msg" id="dstPortMsg"></div>
+              </div>
+            </div>
+
+            <div class="filter-section">
+              <div class="filter-section-label">EITHER DIRECTION</div>
+              <div class="input-group">
+                <div class="field-label-row">
+                  <label class="field-label" for="host">Host / IP</label>
+                  <button type="button" class="not-toggle" id="hostNot" aria-pressed="false">NOT</button>
+                </div>
+                <div class="input-wrap">
+                  <input
+                    type="text"
+                    id="host"
+                    class="mono-input"
+                    placeholder="src or dst, CIDR ok"
+                    autocomplete="off"
+                    spellcheck="false"
+                  />
+                  <button type="button" class="input-clear-btn" data-clear="host" aria-label="Clear">×</button>
+                </div>
+                <div class="field-msg" id="hostMsg"></div>
+              </div>
+              <div class="input-group">
+                <div class="field-label-row">
+                  <label class="field-label" for="port">Port</label>
+                  <button type="button" class="not-toggle" id="portNot" aria-pressed="false">NOT</button>
+                </div>
+                <div class="input-wrap">
+                  <input
+                    type="text"
+                    id="port"
+                    class="mono-input"
+                    placeholder="sport or dport"
+                    autocomplete="off"
+                    spellcheck="false"
+                  />
+                  <button type="button" class="input-clear-btn" data-clear="port" aria-label="Clear">×</button>
+                </div>
+                <div class="field-msg" id="portMsg"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tcpdump-row" style="margin-top:14px">
+            <div class="input-group">
+              <div class="field-label-row">
+                <label class="field-label" for="dropReason">Drop Reason</label>
+                <button type="button" class="not-toggle" id="dropReasonNot" aria-pressed="false">NOT</button>
+              </div>
+              <div class="input-wrap">
+                <input
+                  type="text"
+                  id="dropReason"
+                  class="mono-input"
+                  placeholder="e.g. Policy Drop, pkt_sanity, Sanitize"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <button type="button" class="input-clear-btn" data-clear="dropReason" aria-label="Clear">×</button>
+              </div>
+              <div class="input-hint">Case-insensitive substring match — grep -i</div>
+            </div>
+            <div class="input-group">
+              <div class="field-label-row">
+                <label class="field-label" for="iface">Interface</label>
+                <button type="button" class="not-toggle" id="ifaceNot" aria-pressed="false">NOT</button>
+              </div>
+              <div class="input-wrap">
+                <input
+                  type="text"
+                  id="iface"
+                  class="mono-input"
+                  placeholder="e.g. eth0, bond1"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <button type="button" class="input-clear-btn" data-clear="iface" aria-label="Clear">×</button>
+              </div>
+              <div class="input-hint">Matches interface name in zdebug output</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="/generated/config.js"></script>
+  <script src="js/sidebar.js"></script>
+  <script src="js/fw-zdebug.js"></script>
+</body>
+</html>

@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="/generated/theme.css" />
 </head>
 <body>
   <div id="sidebar-mount"></div>
@@ -28,7 +29,7 @@
     <div class="tool-view" id="tool-home">
       <div class="tool-header">
         <h1 class="tool-title">Network Utilities</h1>
-        <p class="tool-desc">Browser-based tools for network analysis, diagnostics, and command building. All processing runs locally — no data leaves your device.</p>
+        <p class="tool-desc">Browser-based tools for network analysis, diagnostics, and command building. Most processing runs locally — no data leaves your device.</p>
       </div>
 
       <div class="tool-body">
@@ -50,12 +51,48 @@
               <div class="tool-card-arrow">→ open tool</div>
             </a>
 
+            <a href="fw-monitor.html" class="tool-card">
+              <div class="tool-card-section">// command builders</div>
+              <div class="tool-card-name">fw monitor Builder</div>
+              <div class="tool-card-desc">Build Check Point fw monitor capture commands. Filter by IP, port, and protocol with kernel-level inspection point control (i/I/o/O).</div>
+              <div class="tool-card-arrow">→ open tool</div>
+            </a>
+
+            <a href="fw-zdebug.html" class="tool-card">
+              <div class="tool-card-section">// command builders</div>
+              <div class="tool-card-name">fw ctl zdebug Builder</div>
+              <div class="tool-card-desc">Build Check Point fw ctl zdebug drop commands with grep filter pipelines. Narrow real-time kernel drop output by source/destination IP, port, protocol, drop reason, and interface.</div>
+              <div class="tool-card-arrow">→ open tool</div>
+            </a>
+
+            <a href="compose-converter.html" class="tool-card">
+              <div class="tool-card-section">// utilities</div>
+              <div class="tool-card-name">Compose Converter</div>
+              <div class="tool-card-desc">Paste a docker run command to get a docker-compose.yml, or paste a compose file to get docker run command(s). Direction is auto-detected.</div>
+              <div class="tool-card-arrow">→ open tool</div>
+            </a>
+
+            <a href="mqtt.html" class="tool-card">
+              <div class="tool-card-section">// utilities</div>
+              <div class="tool-card-name">MQTT Client</div>
+              <div class="tool-card-desc">Connect to an MQTT broker over WebSocket and browse published topics in a live-updating tree. Subscribe to any topic filter and see values update in real time.</div>
+              <div class="tool-card-arrow">→ open tool</div>
+            </a>
+
+            <a href="routemap.html" class="tool-card">
+              <div class="tool-card-section">// configurators</div>
+              <div class="tool-card-name">Route-Map Builder <span class="wip-badge">WIP</span></div>
+              <div class="tool-card-desc">Build route-map match/set entries and export as Check Point Gaia, Cisco IOS, or Brocade/Ruckus/ICX config. Paste an existing route-map to keep new sequence numbers from colliding.</div>
+              <div class="tool-card-arrow">→ open tool</div>
+            </a>
+
           </div>
         </section>
       </div>
     </div>
   </main>
 
+  <script src="/generated/config.js"></script>
   <script src="js/sidebar.js"></script>
 </body>
 </html>
