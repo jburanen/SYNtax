@@ -1,0 +1,8 @@
+# Files that execute or get rendered inside Linux containers must stay LF —
+# a CRLF shebang ("#!/bin/sh\r") makes the kernel fail with "not found".
+*.sh          text eol=lf
+*.template    text eol=lf
+Dockerfile    text eol=lf
+docker-compose.yml text eol=lf
+nginx/*.conf  text eol=lf
+.env.example  text eol=lf
