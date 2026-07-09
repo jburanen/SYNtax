@@ -185,6 +185,8 @@ values and is loaded after `main.css`, so it wins. See Theming below.
 **Command output**
 - `.cmd-output` — dark box with `$` prompt and `<code id="cmdText">`
 - `.cmd-output.has-errors` — amber border when validation fails
+- `.copy-icon-btn` — small copy icon button (`#copyBtn`) at the right end inside the output box; holds `.icon-copy` + `.icon-check` SVGs, JS toggles `.copied` (green checkmark) on manual copy and auto-copy; disabled when validation fails
+- `.cmd-output-wrap` — relative wrapper for `<pre>`-based outputs (routemap) so the copy icon can float top-right
 
 ## Field Validation Conventions
 

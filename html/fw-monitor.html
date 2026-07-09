@@ -28,7 +28,7 @@
 
     <div class="tool-view" id="tool-fw-monitor">
       <div class="tool-header">
-        <h1 class="tool-title">fw monitor Builder<span class="tool-version">v0.3.0</span></h1>
+        <h1 class="tool-title">fw monitor Builder<span class="tool-version">v0.3.1</span></h1>
         <p class="tool-desc">Build Check Point <code style="color:var(--cyan);font-size:inherit">fw monitor</code> capture commands. Packets are intercepted at kernel inspection points before and after the security policy — a packet that disappears between points was dropped at that stage.</p>
       </div>
 
@@ -40,9 +40,12 @@
           <div class="cmd-output">
             <span class="cmd-prompt">$</span>
             <code id="cmdText">fw monitor -m iIoO -u -e "accept;"</code>
+            <button class="copy-icon-btn" id="copyBtn" title="Copy command" aria-label="Copy command">
+              <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
           </div>
           <div class="cmd-actions">
-            <button class="btn-primary" id="copyBtn">Copy Command</button>
             <span class="copy-feedback" id="copyFeedback"></span>
             <span class="auto-copy-note" id="autoCopyNote"></span>
           </div>

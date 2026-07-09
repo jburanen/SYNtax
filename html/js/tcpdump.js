@@ -258,7 +258,11 @@ function updateCommand() {
     copyTimer = setTimeout(() => {
       navigator.clipboard.writeText(cmd).then(() => {
         autoCopyNote.textContent = '⎘ auto-copied';
-        setTimeout(() => { autoCopyNote.textContent = ''; }, 2000);
+        copyBtn.classList.add('copied');
+        setTimeout(() => {
+          autoCopyNote.textContent = '';
+          copyBtn.classList.remove('copied');
+        }, 2000);
       }).catch(() => {});
     }, 750);
   }
@@ -285,11 +289,11 @@ copyBtn.addEventListener('click', () => {
   navigator.clipboard.writeText(cmdText.textContent).then(() => {
     copyFeedback.textContent = 'copied!';
     copyFeedback.classList.add('copied');
-    copyBtn.textContent = 'Copied!';
+    copyBtn.classList.add('copied');
     setTimeout(() => {
       copyFeedback.textContent = '';
       copyFeedback.classList.remove('copied');
-      copyBtn.textContent = 'Copy Command';
+      copyBtn.classList.remove('copied');
     }, 1500);
   }).catch(() => {
     copyFeedback.textContent = 'copy failed — select manually';

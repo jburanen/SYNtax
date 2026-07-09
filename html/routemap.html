@@ -28,7 +28,7 @@
 
     <div class="tool-view tool-view--wide" id="tool-routemap">
       <div class="tool-header">
-        <h1 class="tool-title">Route-Map Builder<span class="tool-version">v0.3.0</span> <span class="wip-badge">Under Construction</span></h1>
+        <h1 class="tool-title">Route-Map Builder<span class="tool-version">v0.3.1</span> <span class="wip-badge">Under Construction</span></h1>
         <p class="tool-desc">Build a route-map policy from source protocol match/set clauses and export it as Check Point Gaia, Cisco IOS, or Brocade/Ruckus/ICX config. Optionally paste an existing route-map to keep new sequence numbers from colliding with entries already in use.</p>
       </div>
 
@@ -42,10 +42,15 @@
             <button type="button" class="vendor-tab" data-vendor="cisco">Cisco IOS</button>
             <button type="button" class="vendor-tab" data-vendor="brocade">Brocade / Ruckus / ICX</button>
           </div>
-          <pre class="compose-output-pre" id="rmOutput"></pre>
+          <div class="cmd-output-wrap">
+            <pre class="compose-output-pre" id="rmOutput"></pre>
+            <button class="copy-icon-btn" id="copyBtn" title="Copy command" aria-label="Copy command">
+              <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
+          </div>
           <div class="rm-vendor-note">Command keywords follow common vendor conventions — verify against your platform's routing CLI reference before deploying.</div>
           <div class="cmd-actions">
-            <button class="btn-primary" id="copyBtn">Copy Command</button>
             <span class="copy-feedback" id="copyFeedback"></span>
             <span class="auto-copy-note" id="autoCopyNote"></span>
           </div>
