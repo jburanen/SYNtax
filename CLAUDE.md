@@ -273,6 +273,10 @@ The MQTT proxy (Node.js WebSocket tunnel) runs as a second service in docker-com
 
 CI/CD: `server-setup.sh` configures a GitHub webhook on the server that auto-runs deploy on push to main.
 
+## Repo Hygiene
+
+Keep `.gitignore` and `.claudeignore` up to date as new tools, frameworks, or dev dependencies are introduced — add patterns for any new build artifacts, caches, local config, or editor/tooling files as they show up, rather than letting them leak into commits or Claude's context.
+
 ## Git Commits
 
 Whenever Claude is used to update code, add Claude as a co-author on the commit:
