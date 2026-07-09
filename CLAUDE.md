@@ -16,6 +16,7 @@ html/                  # Web root (nginx bind-mount)
     tcpdump.js         # tcpdump builder
     fw-monitor.js      # fw monitor builder
     fw-zdebug.js       # fw ctl zdebug builder
+    routemap.js        # multi-vendor route-map builder (imports pasted route-maps, outputs a change script)
     compose-converter.js
     mqtt-client.js
 nginx/default.conf     # CSP headers, proxy config, /generated/ location

@@ -1057,6 +1057,26 @@ details.collapsible-section > .collapsible-body {
 .rm-action-badge.deny   { background: rgba(224,92,92,0.12); color: var(--red); border: 1px solid rgba(224,92,92,0.35); }
 .rm-action-badge.off    { opacity: 0.5; }
 
+/* Entry lifecycle badge — new / existing (imported) / modified / delete */
+.rm-status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border: 1px solid var(--border-bright);
+}
+.rm-status-badge.new      { color: var(--cyan);  border-color: rgba(77,217,192,0.35); background: rgba(77,217,192,0.08); }
+.rm-status-badge.modified { color: var(--amber); border-color: rgba(230,168,23,0.35); background: rgba(230,168,23,0.08); }
+.rm-status-badge.deleted  { color: var(--red);   border-color: rgba(224,92,92,0.35);  background: rgba(224,92,92,0.08); }
+
+/* Delete-marked imported entry — dimmed, struck through, restorable */
+.rm-row-deleted td { opacity: 0.55; }
+.rm-row-deleted .rm-summary-cell,
+.rm-row-deleted .mono-cell { text-decoration: line-through; }
+
 .rm-row-actions { display: flex; gap: 8px; }
 .rm-row-btn {
   background: none;

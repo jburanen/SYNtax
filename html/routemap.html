@@ -28,7 +28,7 @@
 
     <div class="tool-view tool-view--wide" id="tool-routemap">
       <div class="tool-header">
-        <h1 class="tool-title">Route-Map Builder<span class="tool-version">v0.3.1</span> <span class="wip-badge">Under Construction</span></h1>
+        <h1 class="tool-title">Route-Map Builder<span class="tool-version">v0.4.0</span> <span class="wip-badge">Under Construction</span></h1>
         <p class="tool-desc">Build a route-map policy from source protocol match/set clauses and export it as Check Point Gaia, Cisco IOS, or Brocade/Ruckus/ICX config. Optionally paste an existing route-map to keep new sequence numbers from colliding with entries already in use.</p>
       </div>
 
@@ -73,9 +73,9 @@
           </div>
 
           <details class="collapsible-section">
-            <summary>PASTE EXISTING ROUTE-MAP (auto-populate routemap name, avoid numbering conflicts and allow for delete command generation)</summary>
+            <summary>PASTE EXISTING ROUTE-MAP (imports its entries into the table below for editing and delete-command generation)</summary>
             <div class="collapsible-body">
-              <div class="input-hint" style="margin-bottom:8px">Paste a route-map from Gaia, Cisco IOS, or Brocade/Ruckus/ICX. Its sequence numbers are checked against the route-map name above so new entries don't collide.</div>
+              <div class="input-hint" style="margin-bottom:8px">Paste a route-map from Gaia, Cisco IOS, or Brocade/Ruckus/ICX. Its entries are imported into the entries table below, where you can modify or delete them. The generated output contains only your changes: new entries, modified entries (deleted and re-created), and delete commands.</div>
               <textarea
                 id="pasteText"
                 class="mono-input compose-input"
@@ -84,7 +84,7 @@
                 autocomplete="off"
                 spellcheck="false"
               ></textarea>
-              <div class="input-hint" id="pasteInfo" style="margin-top:8px"></div>
+              <div class="input-hint" id="pasteInfo" style="margin-top:8px; white-space:pre-line"></div>
             </div>
           </details>
         </section>
@@ -101,13 +101,14 @@
                   <th>Action</th>
                   <th>Match</th>
                   <th>Set</th>
+                  <th>Status</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody id="entryTableBody"></tbody>
             </table>
           </div>
-          <div class="rm-entries-empty" id="entryEmpty">No entries yet — build one below and click "Add Entry".</div>
+          <div class="rm-entries-empty" id="entryEmpty">No entries yet — paste an existing route-map above, or build one below and click "Add Entry".</div>
 
           <details class="collapsible-section" open>
             <summary>ADD / EDIT ENTRY</summary>
