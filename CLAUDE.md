@@ -188,6 +188,8 @@ values and is loaded after `main.css`, so it wins. See Theming below.
 - `.cmd-output.has-errors` — amber border when validation fails
 - `.copy-icon-btn` — small copy icon button (`#copyBtn`) at the right end inside the output box; holds `.icon-copy` + `.icon-check` SVGs, JS toggles `.copied` (green checkmark) on manual copy and auto-copy; disabled when validation fails
 - `.cmd-output-wrap` — relative wrapper for `<pre>`-based outputs (routemap) so the copy icon can float top-right
+- `.panel-label.cmd-label-row` — the `// generated command` label as a flex row that also carries the single `#copyFeedback` span, so the panel stays compact (no `.cmd-actions` row under the output; `.cmd-actions` is still used by compose-converter for its action buttons)
+- `.copy-feedback` (`#copyFeedback`) — one feedback span for all copy states. `showCopied()` shows `copied!` in green for **both** manual and auto copy (no separate auto-copy label); `clearFeedback()` resets it. `.error` (amber) is used for `⚠ fix errors above` while validation fails and for a clipboard failure.
 
 ## Field Validation Conventions
 

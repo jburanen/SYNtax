@@ -816,6 +816,15 @@ details.collapsible-section > .collapsible-body {
   min-height: 18px;
 }
 
+/* Panel label that carries the copy feedback inline (command panels) */
+.panel-label.cmd-label-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.cmd-label-row + .cmd-output { margin-bottom: 0; }
+
 /* Copy icon button — sits inside the command output box */
 .copy-icon-btn {
   flex-shrink: 0;
@@ -851,24 +860,17 @@ details.collapsible-section > .collapsible-body {
 .copy-feedback {
   font-size: 0.78rem;
   color: var(--text-muted);
+  letter-spacing: 0.03em;
   transition: color 0.15s;
 }
 .copy-feedback.copied { color: var(--green); }
-
-.auto-copy-note {
-  font-size: 0.72rem;
-  color: var(--cyan-dim);
-  margin-left: auto;
-  letter-spacing: 0.03em;
-  transition: opacity 0.2s;
-}
+.copy-feedback.error  { color: var(--amber); }
 
 /* Responsive */
 @media (max-width: 720px) {
   .tcpdump-row   { flex-direction: column; }
   .filter-grid   { grid-template-columns: 1fr; }
   .filter-proto  { max-width: 100%; }
-  .auto-copy-note { margin-left: 0; }
 }
 
 /* --- Home Tool Cards -------------------------------------- */

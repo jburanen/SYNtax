@@ -77,7 +77,6 @@ const vendorTabs   = Array.from(document.querySelectorAll('.vendor-tab'));
 const outputPre    = $('rmOutput');
 const copyBtn      = $('copyBtn');
 const copyFeedback = $('copyFeedback');
-const autoCopyNote = $('autoCopyNote');
 const rmNameMsg    = 'rmNameMsg';
 
 // ── State ─────────────────────────────────────────────────────
@@ -859,6 +858,22 @@ function restoreEntry(id) {
 // ── Output rendering ─────────────────────────────────────────
 
 let copyTimer = null;
+let feedbackTimer = null;
+
+function clearFeedback() {
+  clearTimeout(feedbackTimer);
+  copyFeedback.textContent = '';
+  copyFeedback.classList.remove('copied', 'error');
+  copyBtn.classList.remove('copied');
+}
+
+function showCopied() {
+  clearFeedback();
+  copyFeedback.textContent = 'copied!';
+  copyFeedback.classList.add('copied');
+  copyBtn.classList.add('copied');
+  feedbackTimer = setTimeout(clearFeedback, 1500);
+}
 
 function updateOutput() {
   const nameR = parseRouteMapName(rmNameInput.value);
@@ -886,18 +901,10 @@ function updateOutput() {
   outputPre.classList.toggle('has-errors', hasErrors);
 
   clearTimeout(copyTimer);
-  if (hasErrors) {
-    autoCopyNote.textContent = '';
-  } else {
+  clearFeedback();
+  if (!hasErrors) {
     copyTimer = setTimeout(() => {
-      navigator.clipboard.writeText(text).then(() => {
-        autoCopyNote.textContent = '⎘ auto-copied';
-        copyBtn.classList.add('copied');
-        setTimeout(() => {
-          autoCopyNote.textContent = '';
-          copyBtn.classList.remove('copied');
-        }, 2000);
-      }).catch(() => {});
+      navigator.clipboard.writeText(text).then(showCopied).catch(() => {});
     }, 750);
   }
 }
@@ -914,19 +921,11 @@ function updateAll() {
 
 copyBtn.addEventListener('click', () => {
   clearTimeout(copyTimer);
-  autoCopyNote.textContent = '';
 
-  navigator.clipboard.writeText(outputPre.textContent).then(() => {
-    copyFeedback.textContent = 'copied!';
-    copyFeedback.classList.add('copied');
-    copyBtn.classList.add('copied');
-    setTimeout(() => {
-      copyFeedback.textContent = '';
-      copyFeedback.classList.remove('copied');
-      copyBtn.classList.remove('copied');
-    }, 1500);
-  }).catch(() => {
+  navigator.clipboard.writeText(outputPre.textContent).then(showCopied).catch(() => {
+    clearFeedback();
     copyFeedback.textContent = 'copy failed — select manually';
+    copyFeedback.classList.add('error');
   });
 });
 

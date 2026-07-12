@@ -28,7 +28,7 @@
 
     <div class="tool-view tool-view--wide" id="tool-routemap">
       <div class="tool-header">
-        <h1 class="tool-title">Route-Map Builder<span class="tool-version">v0.4.0</span> <span class="wip-badge">Under Construction</span></h1>
+        <h1 class="tool-title">Route-Map Builder<span class="tool-version">v0.4.1</span> <span class="wip-badge">Under Construction</span></h1>
         <p class="tool-desc">Build a route-map policy from source protocol match/set clauses and export it as Check Point Gaia, Cisco IOS, or Brocade/Ruckus/ICX config. Optionally paste an existing route-map to keep new sequence numbers from colliding with entries already in use.</p>
       </div>
 
@@ -36,7 +36,10 @@
 
         <!-- Generated Output -->
         <section class="panel" id="outputPanel">
-          <div class="panel-label">// generated route-map</div>
+          <div class="panel-label cmd-label-row">
+            <span>// generated route-map</span>
+            <span class="copy-feedback" id="copyFeedback"></span>
+          </div>
           <div class="vendor-tabs">
             <button type="button" class="vendor-tab active" data-vendor="gaia">Check Point Gaia</button>
             <button type="button" class="vendor-tab" data-vendor="cisco">Cisco IOS</button>
@@ -50,10 +53,6 @@
             </button>
           </div>
           <div class="rm-vendor-note">Command keywords follow common vendor conventions — verify against your platform's routing CLI reference before deploying.</div>
-          <div class="cmd-actions">
-            <span class="copy-feedback" id="copyFeedback"></span>
-            <span class="auto-copy-note" id="autoCopyNote"></span>
-          </div>
         </section>
 
         <!-- Route-map name + existing route-map paste -->

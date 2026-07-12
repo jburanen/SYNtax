@@ -30,7 +30,7 @@
     <!-- Tool: tcpdump Builder -->
     <div class="tool-view" id="tool-tcpdump">
       <div class="tool-header">
-        <h1 class="tool-title">tcpdump Builder<span class="tool-version">v0.2.1</span></h1>
+        <h1 class="tool-title">tcpdump Builder<span class="tool-version">v0.2.2</span></h1>
         <p class="tool-desc">Fill in the fields below to construct a tcpdump capture command. The command updates live as you type and is automatically copied to your clipboard when you pause.</p>
       </div>
 
@@ -38,7 +38,10 @@
 
         <!-- Generated Command — shown first so it's always visible -->
         <section class="panel" id="cmdPanel">
-          <div class="panel-label">// generated command</div>
+          <div class="panel-label cmd-label-row">
+            <span>// generated command</span>
+            <span class="copy-feedback" id="copyFeedback"></span>
+          </div>
           <div class="cmd-output">
             <span class="cmd-prompt">$</span>
             <code id="cmdText">tcpdump</code>
@@ -46,10 +49,6 @@
               <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
               <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </button>
-          </div>
-          <div class="cmd-actions">
-            <span class="copy-feedback" id="copyFeedback"></span>
-            <span class="auto-copy-note" id="autoCopyNote"></span>
           </div>
         </section>
 
