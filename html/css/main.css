@@ -1106,6 +1106,15 @@ details.collapsible-section > .collapsible-body {
   gap: 16px;
   flex-wrap: wrap;
 }
+/* Count badge on the collapsed advanced match / set summaries */
+.rm-adv-count {
+  margin-left: 8px;
+  font-size: 0.7rem;
+  color: var(--cyan);
+  letter-spacing: 0.03em;
+}
+.rm-adv-count:empty { display: none; }
+
 .rm-seq-row .input-group { margin-bottom: 0; }
 .rm-seq-row .hint-val { padding-bottom: 9px; display: inline-block; }
 

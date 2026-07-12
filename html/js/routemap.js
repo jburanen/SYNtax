@@ -70,6 +70,14 @@ const sTag           = $('entrySetTag');
 const sWeight        = $('entrySetWeight');
 const sOrigin        = $('entrySetOrigin');
 
+const advMatchSection = $('advMatchSection');
+const advSetSection   = $('advSetSection');
+const advMatchCount   = $('advMatchCount');
+const advSetCount     = $('advSetCount');
+
+const advMatchFields = [mPrefixList, mNextHopList, mTag, mCommunity, mCommunityEx, mAsPath, mInterface];
+const advSetFields   = [sMetric, sLocalPref, sCommunity, sCommunityAdd, sAsPathPrepend, sNextHop, sTag, sWeight, sOrigin];
+
 const addEntryBtn    = $('addEntryBtn');
 const cancelEditBtn  = $('cancelEditBtn');
 
@@ -554,6 +562,22 @@ function readEntryForm() {
   return { valid, entry };
 }
 
+// ── Advanced sections ────────────────────────────────────────
+// The advanced match / set fields are collapsed by default; the summary shows
+// how many of them are populated so nothing hides silently.
+
+function countFilled(fields) {
+  return fields.filter(el => (el.type === 'checkbox' ? el.checked : el.value.trim() !== '')).length;
+}
+
+function updateAdvBadges() {
+  const m = countFilled(advMatchFields);
+  const s = countFilled(advSetFields);
+  advMatchCount.textContent = m ? `· ${m} set` : '';
+  advSetCount.textContent   = s ? `· ${s} set` : '';
+  return { m, s };
+}
+
 function resetEntryForm() {
   entrySeqInput.value = String(suggestNextSeq(null));
   entryActionSel.value = 'permit';
@@ -576,6 +600,10 @@ function resetEntryForm() {
     sMetric, sLocalPref, sCommunity, sAsPathPrepend, sNextHop, sTag, sWeight,
   ];
   allFields.forEach(el => el.classList.remove('error'));
+
+  advMatchSection.open = false;
+  advSetSection.open = false;
+  updateAdvBadges();
 }
 
 // ── Summaries for the entry list ─────────────────────────────
@@ -832,6 +860,11 @@ function loadEntryIntoForm(id) {
 
   addEntryBtn.textContent = 'Update Entry';
   cancelEditBtn.hidden = false;
+
+  const { m, s } = updateAdvBadges();
+  advMatchSection.open = m > 0;
+  advSetSection.open = s > 0;
+
   updateAll();
   entrySeqInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
@@ -986,9 +1019,14 @@ const entryFormInputs = [
   sMetric, sLocalPref, sCommunity, sCommunityAdd, sAsPathPrepend, sNextHop, sTag, sWeight, sOrigin,
 ];
 entryFormInputs.forEach(el => {
-  el.addEventListener('input', readEntryForm);
-  el.addEventListener('change', readEntryForm);
+  el.addEventListener('input', onEntryFormInput);
+  el.addEventListener('change', onEntryFormInput);
 });
+
+function onEntryFormInput() {
+  readEntryForm();
+  updateAdvBadges();
+}
 
 rmNameInput.addEventListener('input', updateAll);
 pasteText.addEventListener('input', updateAll);
