@@ -16,6 +16,37 @@ theme, or disable individual tools — see [Configuration](#configuration). No
 
 ---
 
+## Tech Stack
+
+Deliberately minimal — the whole point is that a tool page is a plain HTML file
+you can open, read, and change without a toolchain.
+
+| Layer | What it is |
+| --- | --- |
+| Frontend | Vanilla HTML, CSS, and ES6 JavaScript — no framework, no bundler, no npm |
+| Styling | A single hand-written stylesheet (`html/css/main.css`) driven by CSS custom properties |
+| Web server | nginx 1.27 (Alpine), serving `html/` as static files |
+| Container | Docker + Docker Compose; runtime theming rendered at container startup with `envsubst` |
+| MQTT proxy | Node.js 22 (Alpine) WebSocket→TCP tunnel; single dependency, `ws` |
+| Deploy | `deploy.ps1` for local pushes; `server-setup.sh` + a GitHub webhook for auto-deploy on push to `main` |
+
+**No build step.** There is no compile, transpile, or bundle phase for the site.
+`html/` is bind-mounted read-only into the container, so editing a file and
+reloading the browser is the entire dev loop.
+
+**No frontend dependencies.** Every tool's logic — subnet math, BPF filter
+construction, compose conversion, the MQTT client — is client-side JavaScript
+written against the standard browser APIs. The only external asset is the
+JetBrains Mono webfont from Google Fonts, which can be self-hosted to go fully
+air-gapped (see [Security Notes](#security-notes)).
+
+The one server-side component is the `mqtt-proxy` service: browsers can't open
+raw TCP sockets, so it bridges the MQTT client's WebSocket to a plain MQTT
+broker port. It uses `ws` plus Node's built-in `net` module — it forwards bytes
+and does not parse MQTT itself.
+
+---
+
 ## Directory Structure
 
 ```
