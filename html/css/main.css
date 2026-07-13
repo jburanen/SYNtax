@@ -957,15 +957,6 @@ details.collapsible-panel[open] > summary { margin-bottom: 18px; }
   margin-top: 4px;
 }
 
-.tool-card-arrow {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  margin-top: auto;
-  padding-top: 14px;
-  transition: color 0.15s;
-}
-.tool-card:hover .tool-card-arrow { color: var(--cyan); }
-
 /* --- Compose Converter ------------------------------------ */
 
 .compose-input {
