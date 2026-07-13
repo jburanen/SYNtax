@@ -181,13 +181,13 @@ function parseRotateSize(raw) {
   return { valid: true, value: m[1] + (m[2] ? m[2].toUpperCase() : '') };
 }
 
-// Interface field — cppcap has no default interface in R82+, and "any" is
-// expensive. Warnings only; the flag flips to -I when EXCLUDE is active.
+// Interface field — required (-i is mandatory in R82 and higher), and "any"
+// is expensive. The flag flips to -I when the NOT pill is active.
 function parseIfaceInput(raw, excludeActive) {
   const s = (raw || '').trim();
   if (!s) {
     if (excludeActive) return { valid: false, error: 'Enter the interface to exclude (-I)' };
-    return { valid: true, value: null, warning: '-i is mandatory in R82 and higher' };
+    return { valid: false, error: 'Interface is required — -i is mandatory in R82 and higher' };
   }
   if (!/^[a-zA-Z0-9._:\-]+$/.test(s)) {
     return { valid: false, error: 'Enter a valid interface name (e.g. eth0, bond1, any)' };
