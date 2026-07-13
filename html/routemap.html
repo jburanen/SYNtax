@@ -28,7 +28,7 @@
 
     <div class="tool-view tool-view--wide" id="tool-routemap">
       <div class="tool-header">
-        <h1 class="tool-title">Route-Map Builder<span class="tool-version">v0.5.0</span> <span class="wip-badge">Under Construction</span></h1>
+        <h1 class="tool-title">Route-Map Builder<span class="tool-version">v0.5.1</span> <span class="wip-badge">Under Construction</span></h1>
         <p class="tool-desc">Build a route-map policy from source protocol match/set clauses and export it as Check Point Gaia, Cisco IOS, or Brocade/Ruckus/ICX config. Optionally paste an existing route-map to keep new sequence numbers from colliding with entries already in use.</p>
       </div>
 
@@ -141,10 +141,9 @@
                 </div>
               </div>
 
-              <div class="filter-grid" style="grid-template-columns:1fr 1fr">
+              <div class="filter-section-label" style="margin-top:20px">MATCH</div>
+              <div class="filter-grid" style="grid-template-columns:1fr 1fr;margin-top:0">
                 <div class="filter-section">
-                  <div class="filter-section-label">MATCH</div>
-
                   <div class="input-group" style="margin-bottom:0">
                     <div class="field-label-row">
                       <label class="field-label" for="entryMatchNetworks">Networks (one CIDR per line)</label>
@@ -162,8 +161,6 @@
                 </div>
 
                 <div class="filter-section">
-                  <div class="filter-section-label">SOURCE PROTOCOL</div>
-
                   <div class="input-group" style="margin-bottom:0">
                     <label class="field-label" for="entryMatchProtocol">Source protocol</label>
                     <input type="text" id="entryMatchProtocol" class="mono-input" placeholder="e.g. static, direct, bgp, ospf2" autocomplete="off" spellcheck="false" />
