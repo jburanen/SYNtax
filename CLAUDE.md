@@ -25,11 +25,10 @@ proxy/server.js        # Node.js WebSocket↔MQTT tunnel
 docker/                # .env theming — rendered into the container at startup
   theme.css.template   #   :root color/font/size overrides
   config.js.template   #   site title / tab title
-  40-nettools-config.sh#   entrypoint script: defaults + envsubst render
+  40-syntax-config.sh#   entrypoint script: defaults + envsubst render
 .env.example           # Documented, all-optional theming vars (copy to .env)
 docker-compose.yml
 Dockerfile
-deploy.ps1
 server-setup.sh
 ```
 
@@ -231,18 +230,18 @@ into static assets **at container startup**:
 
 ```
 .env  →  docker-compose environment:  →  container
-      →  docker/40-nettools-config.sh (envsubst)
+      →  docker/40-syntax-config.sh (envsubst)
       →  /usr/share/nginx/generated/{theme.css,config.js}
       →  served at /generated/…  →  loaded by every page
 ```
 
 - **All vars are optional.** No `.env`, an empty `.env`, or any unset var → the
-  built-in default. `docker/40-nettools-config.sh` is the **single source of
+  built-in default. `docker/40-syntax-config.sh` is the **single source of
   defaults** (they mirror `main.css`); `.env.example` documents them.
 - Missing `.env` never errors — `docker-compose.yml` passes each var as
   `${VAR:-}`, and the entrypoint's `: "${VAR:=default}"` fills the blank.
 - `theme.css` re-declares `:root` (colors, `--input-bg`, `--font`, `--fs-*`);
-  loaded after `main.css` so it wins. `config.js` sets `window.NETTOOLS_CONFIG`
+  loaded after `main.css` so it wins. `config.js` sets `window.SYNTAX_CONFIG`
   (`logoText`/`logoAccent` → the two sidebar logo spans, `logoSub` → the
   muted subtitle line, `logoLink` → the logo anchor's `href` (default
   `index.html`), all via `sidebar.js`; `tabTitle` → swaps the "SYNtax"
@@ -259,7 +258,7 @@ into static assets **at container startup**:
   different: they're substituted by **docker-compose itself** (`${VAR:-default}` in
   `docker-compose.yml`), not rendered by the entrypoint. Don't add them to the
   `environment:` block or the templates.
-- Adding a new var: add a default in `40-nettools-config.sh`, a placeholder in
+- Adding a new var: add a default in `40-syntax-config.sh`, a placeholder in
   the relevant template + its envsubst var list, a passthrough line in
   `docker-compose.yml`, and a documented entry in `.env.example`.
 - The two `<link>`/`<script>` tags for `/generated/` live in **every** `*.html`
@@ -268,11 +267,6 @@ into static assets **at container startup**:
 
 ## Deployment
 
-```powershell
-.\deploy.ps1          # builds image, restarts container
-```
-
-Or manually:
 ```bash
 docker-compose up -d --build
 ```

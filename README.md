@@ -30,7 +30,7 @@ you can open, read, and change without a toolchain.
 | Web server | nginx 1.27 (Alpine), serving `html/` as static files |
 | Container | Docker + Docker Compose; runtime theming rendered at container startup with `envsubst` |
 | MQTT proxy | Node.js 22 (Alpine) WebSocket→TCP tunnel; single dependency, `ws` |
-| Deploy | `deploy.ps1` for local pushes; `server-setup.sh` + a GitHub webhook for auto-deploy on push to `main` |
+| Deploy | `server-setup.sh` + a GitHub webhook for auto-deploy on push to `main` |
 
 **No build step.** There is no compile, transpile, or bundle phase for the site.
 `html/` is bind-mounted read-only into the container, so editing a file and
@@ -56,14 +56,13 @@ syntax/
 ├── Dockerfile
 ├── docker-compose.yml
 ├── .env.example            # optional theming / branding / module toggles (copy to .env)
-├── deploy.ps1              # push local files to server + git commit/push
 ├── server-setup.sh         # one-time server setup with GitHub webhook auto-deploy
 ├── nginx/
 │   └── default.conf
 ├── docker/                 # .env rendered into the container at startup (envsubst)
 │   ├── theme.css.template  #   :root color / font / text-size overrides
 │   ├── config.js.template  #   logo text, tab title, disabled modules
-│   └── 40-nettools-config.sh  # entrypoint: applies defaults, renders both files
+│   └── 40-syntax-config.sh  # entrypoint: applies defaults, renders both files
 ├── proxy/                  # Node.js WebSocket↔MQTT tunnel (second compose service)
 │   └── server.js
 └── html/                   # web root (bind-mounted read-only into the container)
@@ -141,7 +140,7 @@ docker compose up -d --build
 ```
 
 There is **no build step for your HTML**. At container startup a small
-entrypoint script (`docker/40-nettools-config.sh`) fills in defaults for any
+entrypoint script (`docker/40-syntax-config.sh`) fills in defaults for any
 unset variable and renders two files with `envsubst` —
 `theme.css` (`:root` overrides) and `config.js` (runtime settings) — served at
 `/generated/…` and loaded by every page. Anything you don't set keeps its

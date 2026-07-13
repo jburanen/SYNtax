@@ -48,7 +48,7 @@ export LOGO_TEXT LOGO_ACCENT LOGO_SUB LOGO_LINK TAB_TITLE DISABLED_MODULES \
        TEXT_BASE_SIZE TEXT_TITLE_SIZE TEXT_BODY_SIZE TEXT_LABEL_SIZE TEXT_SMALL_SIZE TEXT_NAV_SIZE
 
 GEN=/usr/share/nginx/generated
-TPL=/etc/nginx/nettools-templates
+TPL=/etc/nginx/syntax-templates
 mkdir -p "$GEN"
 
 # Explicit var lists so envsubst only touches our placeholders

@@ -98,7 +98,7 @@
   // Optional custom brand text from /generated/config.js (.env-driven).
   // logoText keeps the primary color, logoAccent keeps the cyan accent —
   // each overrides independently; unset spans keep the built-in NET/TOOLS.
-  const cfg = window.NETTOOLS_CONFIG || {};
+  const cfg = window.SYNTAX_CONFIG || {};
   if (cfg.logoText) {
     const el = document.querySelector('.logo-text');
     if (el) el.textContent = cfg.logoText;

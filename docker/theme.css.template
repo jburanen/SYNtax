@@ -1,7 +1,7 @@
 /* ============================================================
    SYNtax — generated theme overrides
    Rendered from this template at container startup by
-   docker/40-nettools-config.sh (envsubst). Served at
+   docker/40-syntax-config.sh (envsubst). Served at
    /generated/theme.css and loaded AFTER css/main.css so these
    :root values win. Values come from the .env file; anything
    unset falls back to the defaults baked into the entrypoint

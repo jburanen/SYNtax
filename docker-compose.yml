@@ -35,7 +35,7 @@ services:
     restart: unless-stopped
     # Optional theming — values come from an (optional) .env file in
     # this directory. Anything unset arrives empty and the container's
-    # startup script (docker/40-nettools-config.sh) applies defaults.
+    # startup script (docker/40-syntax-config.sh) applies defaults.
     # See .env.example for the full list and documentation.
     environment:
       - LOGO_TEXT=${LOGO_TEXT:-}

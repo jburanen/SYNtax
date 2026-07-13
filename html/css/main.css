@@ -10,7 +10,7 @@
    --input-bg, --font, and every --fs-*) from .env — editing
    them here has NO effect in the container. You MUST control
    those via .env; their defaults live in
-   docker/40-nettools-config.sh and must mirror this block.
+   docker/40-syntax-config.sh and must mirror this block.
    The values below only apply when running without Docker. */
 :root {
   --bg-base:       #0b0e14;

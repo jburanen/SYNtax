@@ -16,11 +16,11 @@ COPY html/ /usr/share/nginx/html/
 
 # Themeable config: templates + startup renderer. The nginx base
 # image executes /docker-entrypoint.d/*.sh before starting nginx;
-# 40-nettools-config.sh renders theme.css/config.js from .env vars
+# 40-syntax-config.sh renders theme.css/config.js from .env vars
 # into /usr/share/nginx/generated/ (served via nginx location).
-COPY docker/theme.css.template docker/config.js.template /etc/nginx/nettools-templates/
-COPY docker/40-nettools-config.sh /docker-entrypoint.d/40-nettools-config.sh
-RUN chmod +x /docker-entrypoint.d/40-nettools-config.sh \
+COPY docker/theme.css.template docker/config.js.template /etc/nginx/syntax-templates/
+COPY docker/40-syntax-config.sh /docker-entrypoint.d/40-syntax-config.sh
+RUN chmod +x /docker-entrypoint.d/40-syntax-config.sh \
     && mkdir -p /usr/share/nginx/generated
 
 # nginx runs as non-root for safety

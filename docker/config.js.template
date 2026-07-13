@@ -2,12 +2,12 @@
 /* ============================================================
    SYNtax — generated runtime config
    Rendered from this template at container startup by
-   docker/40-nettools-config.sh (envsubst). Served at
+   docker/40-syntax-config.sh (envsubst). Served at
    /generated/config.js and loaded BEFORE js/sidebar.js.
    Both values default to empty; when empty the built-in page
    text is left untouched. Do not edit by hand — change .env.
    ============================================================ */
-window.NETTOOLS_CONFIG = {
+window.SYNTAX_CONFIG = {
   logoText:        "${LOGO_TEXT}",
   logoAccent:      "${LOGO_ACCENT}",
   logoSub:         "${LOGO_SUB}",
@@ -17,7 +17,7 @@ window.NETTOOLS_CONFIG = {
 };
 
 (function () {
-  var c = window.NETTOOLS_CONFIG;
+  var c = window.SYNTAX_CONFIG;
 
   // Swap the "SYNtax" brand prefix in the browser-tab title,
   // preserving each page's own "— Tool Name" suffix.
