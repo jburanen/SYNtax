@@ -40,7 +40,6 @@ const cmdText      = $('cmdText');
 const cmdOutput    = document.querySelector('.cmd-output');
 const copyBtn      = $('copyBtn');
 const copyFeedback = $('copyFeedback');
-const autoCopyNote = $('autoCopyNote');
 const displayMsg   = $('displayMsg');
 
 // ── Validation ────────────────────────────────────────────────
@@ -343,6 +342,22 @@ function buildCommand() {
 // ── Live update + auto-copy ───────────────────────────────────
 
 let copyTimer = null;
+let feedbackTimer = null;
+
+function clearFeedback() {
+  clearTimeout(feedbackTimer);
+  copyFeedback.textContent = '';
+  copyFeedback.classList.remove('copied', 'error');
+  copyBtn.classList.remove('copied');
+}
+
+function showCopied() {
+  clearFeedback();
+  copyFeedback.textContent = 'copied!';
+  copyFeedback.classList.add('copied');
+  copyBtn.classList.add('copied');
+  feedbackTimer = setTimeout(clearFeedback, 1500);
+}
 
 function updateCommand() {
   const { cmd, hasErrors } = buildCommand();
@@ -352,19 +367,13 @@ function updateCommand() {
   cmdOutput.classList.toggle('has-errors', hasErrors);
 
   clearTimeout(copyTimer);
+  clearFeedback();
   if (hasErrors) {
-    autoCopyNote.textContent = '⚠ fix errors above';
+    copyFeedback.textContent = '⚠ fix errors above';
+    copyFeedback.classList.add('error');
   } else {
-    autoCopyNote.textContent = '';
     copyTimer = setTimeout(() => {
-      navigator.clipboard.writeText(cmd).then(() => {
-        autoCopyNote.textContent = '⎘ auto-copied';
-        copyBtn.classList.add('copied');
-        setTimeout(() => {
-          autoCopyNote.textContent = '';
-          copyBtn.classList.remove('copied');
-        }, 2000);
-      }).catch(() => {});
+      navigator.clipboard.writeText(cmd).then(showCopied).catch(() => {});
     }, 750);
   }
 }
@@ -395,19 +404,11 @@ ifaceExclude.addEventListener('click', () => {
 
 copyBtn.addEventListener('click', () => {
   clearTimeout(copyTimer);
-  autoCopyNote.textContent = '';
 
-  navigator.clipboard.writeText(cmdText.textContent).then(() => {
-    copyFeedback.textContent = 'copied!';
-    copyFeedback.classList.add('copied');
-    copyBtn.classList.add('copied');
-    setTimeout(() => {
-      copyFeedback.textContent = '';
-      copyFeedback.classList.remove('copied');
-      copyBtn.classList.remove('copied');
-    }, 1500);
-  }).catch(() => {
+  navigator.clipboard.writeText(cmdText.textContent).then(showCopied).catch(() => {
+    clearFeedback();
     copyFeedback.textContent = 'copy failed — select manually';
+    copyFeedback.classList.add('error');
   });
 });
 
