@@ -38,13 +38,13 @@
       <span class="nav-icon">⬡</span>
       <span class="nav-label">fw monitor</span>
     </a>
-    <a href="fw-zdebug.html" class="nav-item" data-tool="fw-zdebug">
-      <span class="nav-icon">⬡</span>
-      <span class="nav-label">fw ctl zdebug</span>
-    </a>
     <a href="cppcap.html" class="nav-item" data-tool="cppcap">
       <span class="nav-icon">⬡</span>
       <span class="nav-label">cppcap</span>
+    </a>
+    <a href="fw-zdebug.html" class="nav-item" data-tool="fw-zdebug">
+      <span class="nav-icon">⬡</span>
+      <span class="nav-label">fw ctl zdebug</span>
     </a>
     <div class="nav-item disabled" title="Coming soon">
       <span class="nav-icon">⬡</span>
