@@ -1153,8 +1153,13 @@ details.collapsible-panel[open] > summary { margin-bottom: 18px; }
 .rm-adv-count:empty { display: none; }
 
 .rm-seq-row .input-group { margin-bottom: 0; }
-/* Vertically center the Enabled toggle against the input row (input = font line + 20px padding + 2px border) */
-.rm-enabled-group .toggle-row { min-height: calc(var(--fs-body) * 1.2 + 22px); }
+
+/* Enabled toggle + its hint, stacked under the sequence / action row */
+.rm-enabled-group { margin-top: 14px; }
+.rm-enabled-group .input-hint { margin-top: 6px; }
+/* The empty field-msg under Sequence still carries its top margin — drop it so
+   the Enabled block doesn't inherit a phantom gap once the row wraps. */
+.rm-seq-row .field-msg:empty { margin-top: 0; }
 
 /* Networks label + mode select: let the label wrap instead of crushing the select */
 .field-label-row #entryMatchNetworkMode { flex: 0 0 auto; }

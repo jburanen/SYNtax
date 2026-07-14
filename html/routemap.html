@@ -28,7 +28,7 @@
 
     <div class="tool-view tool-view--wide" id="tool-routemap">
       <div class="tool-header">
-        <h1 class="tool-title">Route-Map Builder<span class="tool-version">v0.5.2</span> <span class="wip-badge">Under Construction</span></h1>
+        <h1 class="tool-title">Route-Map Builder<span class="tool-version">v0.5.3</span> <span class="wip-badge">Under Construction</span></h1>
         <p class="tool-desc">Build a route-map policy from source protocol match/set clauses and export it as Check Point Gaia, Cisco IOS, or Brocade/Ruckus/ICX config. Optionally paste an existing route-map to keep new sequence numbers from colliding with entries already in use.</p>
       </div>
 
@@ -131,14 +131,14 @@
                     <option value="deny">deny/restrict</option>
                   </select>
                 </div>
-                <div class="input-group rm-enabled-group">
-                  <span class="field-label" aria-hidden="true">&nbsp;</span>
-                  <label class="toggle-row">
-                    <input type="checkbox" id="entryEnabled" class="toggle-check" checked />
-                    <span class="toggle-label">Enabled</span>
-                  </label>
-                  <div class="input-hint" style="margin-top:0">Unchecked → Gaia emits <code style="color:var(--cyan)">off</code>; Cisco/Brocade omit the entry (no disable state)</div>
-                </div>
+              </div>
+
+              <div class="rm-enabled-group">
+                <label class="toggle-row">
+                  <input type="checkbox" id="entryEnabled" class="toggle-check" checked />
+                  <span class="toggle-label">Enabled</span>
+                </label>
+                <div class="input-hint">Unchecked → Gaia emits <code style="color:var(--cyan)">off</code>; Cisco/Brocade omit the entry (no disable state)</div>
               </div>
 
               <div class="filter-section-label" style="margin-top:20px">MATCH</div>
