@@ -633,6 +633,11 @@ select.mono-input option { background: var(--bg-raised); }
   gap: 24px;
   margin-top: 20px;
 }
+/* Two-column variant (routemap match / set clause grids) */
+.filter-grid.two-col {
+  grid-template-columns: 1fr 1fr;
+  margin-top: 0;
+}
 
 .filter-section-label {
   font-size: 0.65rem;
@@ -907,7 +912,9 @@ details.collapsible-panel[open] > summary { margin-bottom: 18px; }
 /* Responsive */
 @media (max-width: 720px) {
   .tcpdump-row   { flex-direction: column; }
-  .filter-grid   { grid-template-columns: 1fr; }
+  .filter-grid,
+  .filter-grid.two-col { grid-template-columns: 1fr; }
+  .filter-grid.two-col { gap: 20px; }
   .filter-proto  { max-width: 100%; }
   .option-toggles.two-col { grid-template-columns: 1fr; }
 }
@@ -1148,6 +1155,9 @@ details.collapsible-panel[open] > summary { margin-bottom: 18px; }
 .rm-seq-row .input-group { margin-bottom: 0; }
 /* Vertically center the Enabled toggle against the input row (input = font line + 20px padding + 2px border) */
 .rm-enabled-group .toggle-row { min-height: calc(var(--fs-body) * 1.2 + 22px); }
+
+/* Networks label + mode select: let the label wrap instead of crushing the select */
+.field-label-row #entryMatchNetworkMode { flex: 0 0 auto; }
 
 /* --- Scrollbar -------------------------------------------- */
 ::-webkit-scrollbar { width: 6px; height: 6px; }

@@ -28,7 +28,7 @@
 
     <div class="tool-view tool-view--wide" id="tool-routemap">
       <div class="tool-header">
-        <h1 class="tool-title">Route-Map Builder<span class="tool-version">v0.5.1</span> <span class="wip-badge">Under Construction</span></h1>
+        <h1 class="tool-title">Route-Map Builder<span class="tool-version">v0.5.2</span> <span class="wip-badge">Under Construction</span></h1>
         <p class="tool-desc">Build a route-map policy from source protocol match/set clauses and export it as Check Point Gaia, Cisco IOS, or Brocade/Ruckus/ICX config. Optionally paste an existing route-map to keep new sequence numbers from colliding with entries already in use.</p>
       </div>
 
@@ -127,8 +127,8 @@
                 <div class="input-group">
                   <label class="field-label" for="entryAction">Action</label>
                   <select id="entryAction" class="mono-input" style="max-width:180px">
-                    <option value="permit">permit (Gaia: allow)</option>
-                    <option value="deny">deny (Gaia: restrict)</option>
+                    <option value="permit">permit/allow</option>
+                    <option value="deny">deny/restrict</option>
                   </select>
                 </div>
                 <div class="input-group rm-enabled-group">
@@ -142,7 +142,7 @@
               </div>
 
               <div class="filter-section-label" style="margin-top:20px">MATCH</div>
-              <div class="filter-grid" style="grid-template-columns:1fr 1fr;margin-top:0">
+              <div class="filter-grid two-col">
                 <div class="filter-section">
                   <div class="input-group" style="margin-bottom:0">
                     <div class="field-label-row">
@@ -173,7 +173,7 @@
               <details class="collapsible-section" id="advMatchSection">
                 <summary>ADVANCED MATCH<span class="rm-adv-count" id="advMatchCount"></span></summary>
                 <div class="collapsible-body">
-                  <div class="filter-grid" style="grid-template-columns:1fr 1fr;margin-top:0">
+                  <div class="filter-grid two-col">
                     <div class="filter-section">
                       <div class="input-group">
                         <label class="field-label" for="entryMatchPrefixList">Prefix-list (existing object)</label>
@@ -226,7 +226,7 @@
               <details class="collapsible-section" id="advSetSection">
                 <summary>SET VALUES<span class="rm-adv-count" id="advSetCount"></span></summary>
                 <div class="collapsible-body">
-                  <div class="filter-grid" style="grid-template-columns:1fr 1fr;margin-top:0">
+                  <div class="filter-grid two-col">
                     <div class="filter-section">
                       <div class="input-group">
                         <label class="field-label" for="entrySetMetric">Metric</label>
